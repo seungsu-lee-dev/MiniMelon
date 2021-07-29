@@ -4,7 +4,7 @@
 
 사용 언어 : Java, Html, Css, JavaScript
 
-사용 IDE : IntelliJ
+사용 IDE : IntelliJ IDEA
 
 사용 프레임워크 : SpringBoot
 
