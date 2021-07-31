@@ -1,6 +1,7 @@
 var main = {
     init : function () {
         var _this = this;
+        var isPlaying = false;
         $('#btn-save').on('click', function () {
             _this.save();
         });
@@ -9,6 +10,16 @@ var main = {
         });
         $('#btn-delete').on('click', function () {
             _this.delete();
+        });
+        $('#btn-PlayPause').on('click', function () {
+            if (!isPlaying) {
+                $('#player')[0].contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                isPlaying = true;
+            }
+            else {
+                $('#player')[0].contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                isPlaying = false;
+            }
         });
     },
     save : function () {
