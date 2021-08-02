@@ -1,4 +1,7 @@
 .gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+/out
 .idea
 
 application-real-oauth.properties
