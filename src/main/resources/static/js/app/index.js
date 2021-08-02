@@ -1,7 +1,8 @@
 var main = {
     init : function () {
-        var _this = this;
-        var isPlaying = false;
+        let _this = this;
+        let isPlaying = false;
+        let initialUri = "https://www.youtube.com/results?search_query=";
         $('#btn-save').on('click', function () {
             _this.save();
         });
@@ -11,7 +12,7 @@ var main = {
         $('#btn-delete').on('click', function () {
             _this.delete();
         });
-        $('#btn-PlayPause').on('click', function () {
+        $('#btn-playPause').on('click', function () {
             if (!isPlaying) {
                 $('#player')[0].contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
                 isPlaying = true;
@@ -19,6 +20,23 @@ var main = {
             else {
                 $('#player')[0].contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
                 isPlaying = false;
+            }
+        });
+        $('#btn-search').on('click', function () {
+            let singer = document.getElementById('singer').value;
+            let title = document.getElementById('title').value;
+            let searchUri = "";
+            if (!singer) {
+                alert("가수를 입력해주세요");
+                document.getElementById('singer').focus();
+            }
+            else if (!title) {
+                alert("제목을 입력해주세요");
+                document.getElementById('title').focus();
+            }
+            else {
+                searchUri = initialUri + singer + "+" + title;
+                alert(searchUri);
             }
         });
     },
