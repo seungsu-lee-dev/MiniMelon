@@ -24,20 +24,19 @@ var main = {
         });
         $('#btn-search').on('click', function () {
             let singer = document.getElementById('singer').value;
-            let title = document.getElementById('title').value;
+            let songTitle = document.getElementById('songTitle').value;
             let searchUri = "";
             if (!singer) {
                 alert("가수를 입력해주세요");
                 document.getElementById('singer').focus();
             }
-            else if (!title) {
+            else if (!songTitle) {
                 alert("제목을 입력해주세요");
-                document.getElementById('title').focus();
+                document.getElementById('songTitle').focus();
             }
             else {
-                searchUri = initialUri + singer + "+" + title;
-                // alert(searchUri);
-                _this.searchMusic();
+                searchUri = initialUri + singer + "+" + songTitle;
+                _this.searchMusic(searchUri);
             }
         });
     },
@@ -97,8 +96,23 @@ var main = {
             alert(JSON.stringify(error));
         });
     },
-    searchMusic : function () {
-
+    searchMusic : function (uriValue) {
+        var data = {
+            uri: uriValue
+        };
+        $.ajax({
+           type: 'POST',
+            url: '/musicPlay',
+            dataType: 'string',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data)
+        }).done(function() {
+            alert(data);
+            console.log(data);
+            window.location.href = '/';
+        }).fail(function() {
+            console.log(data);
+        });
     }
 
 };
