@@ -36,7 +36,8 @@ var main = {
             }
             else {
                 searchUri = initialUri + singer + "+" + title;
-                alert(searchUri);
+                // alert(searchUri);
+                _this.searchMusic();
             }
         });
     },
@@ -95,6 +96,9 @@ var main = {
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });
+    },
+    searchMusic : function () {
+
     }
 
 };

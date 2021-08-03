@@ -29,6 +29,7 @@ dependencies {
     compile('com.h2database:h2')
     compile('org.springframework.boot:spring-boot-starter-mustache')
     compile('org.springframework.boot:spring-boot-devtools')
+    compile('org.jsoup:jsoup:1.11.3')
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
