@@ -3,6 +3,8 @@ var main = {
         let _this = this;
         let isPlaying = false;
         let initialUri = "https://www.youtube.com/results?search_query=";
+        let searchIndex = 0;
+        var musicList;
         $('#btn-save').on('click', function () {
             _this.save();
         });
@@ -36,11 +38,15 @@ var main = {
             }
             else {
                 searchUri = initialUri + singer + "+" + songTitle;
-                _this.searchMusic(searchUri);
+                musicList = _this.searchMusic(searchUri);
+                searchIndex = 0;
+                _this.overlayInfo(musicList, searchIndex);
             }
         });
         $('#btn-nextMusic').on('click', function () {
-            _this.nextMusic();
+            isPlaying = false;
+            searchIndex++;
+            _this.overlayInfo(musicList, searchIndex);
         });
     },
     save : function () {
@@ -114,24 +120,20 @@ var main = {
         }).done(function(data) {
             console.log("searchValue: "+data);
             obj = JSON.parse(data);
-            console.log(obj.thumbnailLink);
-            console.log(obj.videoLink);
-            console.log(obj.videoTitle);
+            console.log(obj[0].thumbnailLink);
+            console.log(obj[0].videoLink);
+            console.log(obj[0].videoTitle);
         }).fail(function(error) {
             console.log(error);
         });
-        this.overlayInfo(obj.thumbnailLink, obj.videoLink, obj.videoTitle);
+        return obj;
     },
-    overlayInfo : function (thumbnailLink, videoLink, videoTitle) {
-        document.getElementById("thumbnail").setAttribute("src", thumbnailLink);
-        document.getElementById("videoTitle").innerText = videoTitle;
-        let link = "https://www.youtube.com/embed/" + videoLink + "?autoplay=0&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + videoLink;
+    overlayInfo : function (musicJson, index) {
+        document.getElementById("thumbnail").setAttribute("src", musicJson[index].thumbnailLink);
+        document.getElementById("videoTitle").innerText = musicJson[index].videoTitle;
+        let link = "https://www.youtube.com/embed/" + musicJson[index].videoLink + "?autoplay=0&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + musicJson[index].videoLink;
         document.getElementById("player").setAttribute("src", link);
-    },
-    nextMusic : function () {
-
     }
-
 };
 
 main.init();

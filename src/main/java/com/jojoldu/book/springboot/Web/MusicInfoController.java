@@ -10,12 +10,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 public class MusicInfoController {
     private static Logger logger = LoggerFactory.getLogger(MusicInfoController.class.getSimpleName());
     MusicInfoDto musicInfoDto = new MusicInfoDto();
+    List<MusicInfoDto> searchMusicList = new ArrayList<MusicInfoDto>();
     @ResponseBody
     @PostMapping("/musicPlay")
     public String searchMusic(@RequestBody String jsonUri) {
@@ -54,28 +57,39 @@ public class MusicInfoController {
             JSONArray content2 = musicJObject.getJSONObject("contents").getJSONObject("twoColumnSearchResultsRenderer").getJSONObject("primaryContents").getJSONObject("sectionListRenderer").getJSONArray("contents").getJSONObject(0).getJSONObject("itemSectionRenderer").getJSONArray("contents");
 //            logger.info(content2.toString());
 
-            // 영상 정보(썸네일 주소, 영상 주소, 영상 제목)
-            JSONObject musicData = content2.getJSONObject(0).getJSONObject("videoRenderer");
+            searchMusicList = new ArrayList<MusicInfoDto>();
+            for(int i=0;i<content2.length();i++) {
+                // 영상 정보(썸네일 주소, 영상 주소, 영상 제목)
+                JSONObject musicData;
+                try {
+                    musicData = content2.getJSONObject(i).getJSONObject("videoRenderer");
+                } catch (Exception e) {
+                    continue;
+                }
 //            logger.info(String.valueOf(musicData));
-            // 썸네일 주소
-            String thumbnailLink = musicData.getJSONObject("thumbnail").getJSONArray("thumbnails").getJSONObject(0).getString("url");
-            logger.info(thumbnailLink);
-            // 영상 주소
-            String videoLink = musicData.getString("videoId");
-            logger.info(videoLink);
-            // 영상 제목
-            String videoTitle = musicData.getJSONObject("title").getJSONObject("accessibility").getJSONObject("accessibilityData").getString("label");
+                // 썸네일 주소
+                String thumbnailLink = musicData.getJSONObject("thumbnail").getJSONArray("thumbnails").getJSONObject(0).getString("url");
+                logger.info(thumbnailLink);
+                // 영상 주소
+                String videoLink = musicData.getString("videoId");
+                logger.info(videoLink);
+                // 영상 제목
+                String videoTitle = musicData.getJSONObject("title").getJSONObject("accessibility").getJSONObject("accessibilityData").getString("label");
 //            logger.info(videoTitle);
-            String finalVideoTitle = videoTitle.substring(0, videoTitle.indexOf("게시자")-1);
-            logger.info(finalVideoTitle);
+                String finalVideoTitle = videoTitle.substring(0, videoTitle.indexOf("게시자")-1);
+                logger.info(finalVideoTitle);
 
-            musicInfoDto = new MusicInfoDto(thumbnailLink, videoLink, finalVideoTitle);
-            logger.info(musicInfoDto.toString());
+                musicInfoDto = new MusicInfoDto(thumbnailLink, videoLink, finalVideoTitle);
+                logger.info(musicInfoDto.toString());
 
+                searchMusicList.add(musicInfoDto);
+            }
+            logger.info("searchMusicList 길이: " + searchMusicList.size());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return musicInfoDto.toString();
+//        return musicInfoDto.toString();
+        return searchMusicList.toString();
     }
 }
