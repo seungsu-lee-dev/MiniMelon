@@ -4,7 +4,7 @@ var main = {
         let isPlaying = false;
         let initialUri = "https://www.youtube.com/results?search_query=";
         let searchIndex = 0;
-        var musicList;
+        let musicList;
         $('#btn-save').on('click', function () {
             _this.save();
         });
@@ -15,7 +15,10 @@ var main = {
             _this.delete();
         });
         $('#btn-playPause').on('click', function () {
-            if (!isPlaying) {
+            if (musicList==null) {
+                alert("노래를 검색해주세요");
+            }
+            else if (!isPlaying) {
                 $('#player')[0].contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
                 isPlaying = true;
             }
@@ -44,9 +47,28 @@ var main = {
             }
         });
         $('#btn-nextMusic').on('click', function () {
+            if (musicList==null) {
+                alert("노래를 검색해주세요");
+                return;
+            }
+            else if (searchIndex==(musicList.length-1)) {
+                alert("마지막 영상입니다");
+                return;
+            }
             isPlaying = false;
-            searchIndex++;
-            _this.overlayInfo(musicList, searchIndex);
+            _this.overlayInfo(musicList, ++searchIndex);
+        });
+        $('#btn-previousMusic').on('click', function () {
+            if (musicList==null) {
+                alert("노래를 검색해주세요");
+                return;
+            }
+            else if (!searchIndex) {
+                alert("처음 영상입니다");
+                return;
+            }
+            isPlaying = false;
+            _this.overlayInfo(musicList, --searchIndex);
         });
     },
     save : function () {
