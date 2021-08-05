@@ -1,11 +1,10 @@
 package com.jojoldu.book.springboot.Web;
 
+import com.jojoldu.book.springboot.Web.dto.MusicInfoDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +13,14 @@ import java.io.IOException;
 import java.util.Date;
 
 @RestController
-public class MusicSearchController {
-    private static Logger logger = LoggerFactory.getLogger(MusicSearchController.class.getSimpleName());
-
+public class MusicInfoController {
+    private static Logger logger = LoggerFactory.getLogger(MusicInfoController.class.getSimpleName());
+    MusicInfoDto musicInfoDto = new MusicInfoDto();
     @ResponseBody
     @PostMapping("/musicPlay")
     public String searchMusic(@RequestBody String jsonUri) {
         try {
-            logger.info("MusicSearchController " + new Date());
+            logger.info("MusicInfoController " + new Date());
             logger.info(jsonUri);
             JSONObject uriJObject = new JSONObject(jsonUri);
             String uri = uriJObject.getString("uri");
@@ -38,9 +37,6 @@ public class MusicSearchController {
 //            if (num!=0) {
 //                logger.info(videoLinks.get(0).text());
 //            }
-
-//            Connection.Response response = Jsoup.connect(uri)
-//                    .userAgent()
 
 //            JSONObject musicJObject = new JSONObject(doc);
 //            JSONArray musicArr = musicJObject.getJSONArray("contents");
@@ -72,10 +68,14 @@ public class MusicSearchController {
 //            logger.info(videoTitle);
             String finalVideoTitle = videoTitle.substring(0, videoTitle.indexOf("게시자")-1);
             logger.info(finalVideoTitle);
+
+            musicInfoDto = new MusicInfoDto(thumbnailLink, videoLink, finalVideoTitle);
+            logger.info(musicInfoDto.toString());
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return "";
+        return musicInfoDto.toString();
     }
 }

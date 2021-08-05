@@ -39,6 +39,9 @@ var main = {
                 _this.searchMusic(searchUri);
             }
         });
+        $('#btn-nextMusic').on('click', function () {
+            _this.nextMusic();
+        });
     },
     save : function () {
         var data = {
@@ -103,16 +106,23 @@ var main = {
         $.ajax({
            type: 'POST',
             url: '/musicPlay',
-            dataType: 'string',
+            // dataType: 'string',
             contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(data)
-        }).done(function() {
-            alert(data);
-            console.log(data);
-            window.location.href = '/';
-        }).fail(function() {
-            console.log(data);
+            data: JSON.stringify(data),
+            async: false
+        }).done(function(data) {
+            console.log("searchValue: "+data);
+            var obj = JSON.parse(data);
+            console.log(obj.thumbnailLink);
+            console.log(obj.videoLink);
+            console.log(obj.videoTitle);
+
+        }).fail(function(error) {
+            console.log(error);
         });
+    },
+    nextMusic : function () {
+
     }
 
 };
