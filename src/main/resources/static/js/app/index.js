@@ -103,6 +103,7 @@ var main = {
         var data = {
             uri: uriValue
         };
+        var obj;
         $.ajax({
            type: 'POST',
             url: '/musicPlay',
@@ -112,14 +113,25 @@ var main = {
             async: false
         }).done(function(data) {
             console.log("searchValue: "+data);
-            var obj = JSON.parse(data);
+            obj = JSON.parse(data);
             console.log(obj.thumbnailLink);
             console.log(obj.videoLink);
             console.log(obj.videoTitle);
-
         }).fail(function(error) {
             console.log(error);
         });
+        this.overlayInfo(obj.thumbnailLink, obj.videoLink, obj.videoTitle);
+    },
+    overlayInfo : function (thumbnailLink, videoLink, videoTitle) {
+        const thumbnailWrap = document.querySelector(".thumbnail-wrap");
+        let img = document.createElement("img");
+        img.setAttribute("src", thumbnailLink);
+        thumbnailWrap.appendChild(img);
+        let title = document.createElement("p");
+        title.innerText = videoTitle;
+        thumbnailWrap.appendChild(title);
+        let link = "https://www.youtube.com/embed/" + videoLink + "?autoplay=0&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + videoLink;
+        document.getElementById("player").setAttribute("src", link);
     },
     nextMusic : function () {
 
