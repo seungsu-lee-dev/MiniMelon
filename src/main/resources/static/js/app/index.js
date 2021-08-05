@@ -123,13 +123,8 @@ var main = {
         this.overlayInfo(obj.thumbnailLink, obj.videoLink, obj.videoTitle);
     },
     overlayInfo : function (thumbnailLink, videoLink, videoTitle) {
-        const thumbnailWrap = document.querySelector(".thumbnail-wrap");
-        let img = document.createElement("img");
-        img.setAttribute("src", thumbnailLink);
-        thumbnailWrap.appendChild(img);
-        let title = document.createElement("p");
-        title.innerText = videoTitle;
-        thumbnailWrap.appendChild(title);
+        document.getElementById("thumbnail").setAttribute("src", thumbnailLink);
+        document.getElementById("videoTitle").innerText = videoTitle;
         let link = "https://www.youtube.com/embed/" + videoLink + "?autoplay=0&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + videoLink;
         document.getElementById("player").setAttribute("src", link);
     },
