@@ -76,6 +76,7 @@ public class MusicInfoController {
                 // 영상 제목
                 String videoTitle = musicData.getJSONObject("title").getJSONObject("accessibility").getJSONObject("accessibilityData").getString("label");
 //            logger.info(videoTitle);
+                videoTitle = videoTitle.replaceAll("\"", "");
                 String finalVideoTitle = videoTitle.substring(0, videoTitle.indexOf("게시자")-1);
                 logger.info(finalVideoTitle);
 
