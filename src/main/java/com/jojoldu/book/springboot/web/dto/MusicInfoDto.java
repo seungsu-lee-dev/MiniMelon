@@ -1,4 +1,4 @@
-package com.jojoldu.book.springboot.Web.dto;
+package com.jojoldu.book.springboot.web.dto;
 
 public class MusicInfoDto {
     String thumbnailLink;

@@ -1,4 +1,4 @@
-package com.jojoldu.book.springboot.Web;
+package com.jojoldu.book.springboot.web;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,6 @@ public class IndexControllerTest {
     @Test
     public void 메인페이지_로딩() {
         String body = this.restTemplate.getForObject("/", String.class);
-
-        assertThat(body).contains("CAT(Code & Talk) Team");
+        assertThat(body).contains("미니 멜론");
     }
 }

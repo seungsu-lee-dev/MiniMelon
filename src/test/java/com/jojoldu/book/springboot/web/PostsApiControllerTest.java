@@ -1,7 +1,7 @@
-package com.jojoldu.book.springboot.Web;
+package com.jojoldu.book.springboot.web;
 
-import com.jojoldu.book.springboot.Web.dto.PostsSaveRequestDto;
-import com.jojoldu.book.springboot.Web.dto.PostsUpdateRequestDto;
+import com.jojoldu.book.springboot.web.dto.PostsSaveRequestDto;
+import com.jojoldu.book.springboot.web.dto.PostsUpdateRequestDto;
 import com.jojoldu.book.springboot.domain.posts.Posts;
 import com.jojoldu.book.springboot.domain.posts.PostsRepository;
 import org.junit.After;
@@ -16,6 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
@@ -32,6 +33,9 @@ public class PostsApiControllerTest {
 
     @Autowired
     private PostsRepository postsRepository;
+
+    @Autowired
+    private WebApplicationContext context;
 
     @After
     public void tearDown() {
@@ -70,8 +74,8 @@ public class PostsApiControllerTest {
         .build());
 
         Long updateId = savedPosts.getId();
-        String expectedTitle = "title2";
-        String expectedContent = "content2";
+        String expectedTitle = "title";
+        String expectedContent = "content";
 
         PostsUpdateRequestDto requestDto = PostsUpdateRequestDto.builder()
                 .title(expectedTitle)

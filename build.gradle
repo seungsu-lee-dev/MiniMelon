@@ -24,14 +24,20 @@ repositories {
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.projectlombok:lombok')
+//    compile('org.projectlombok:lombok')
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
-    compile('com.h2database:h2')
+//    compile('com.h2database:h2')
+    testImplementation group: 'com.h2database', name: 'h2', version: '1.4.197'
     compile('org.springframework.boot:spring-boot-starter-mustache')
     compile('org.springframework.boot:spring-boot-devtools')
     compile('org.jsoup:jsoup:1.11.3')
     compile('org.json:json:20190722')
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: "com.vaadin.external.google", module:"android-json"
+    }
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    runtimeOnly 'mysql:mysql-connector-java'
 }

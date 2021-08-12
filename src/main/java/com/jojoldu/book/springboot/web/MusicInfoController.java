@@ -1,6 +1,6 @@
-package com.jojoldu.book.springboot.Web;
+package com.jojoldu.book.springboot.web;
 
-import com.jojoldu.book.springboot.Web.dto.MusicInfoDto;
+import com.jojoldu.book.springboot.web.dto.MusicInfoDto;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
