@@ -4,7 +4,7 @@ import com.jojoldu.book.springboot.domain.AutoList;
 import com.jojoldu.book.springboot.domain.AutoListRepository;
 import com.jojoldu.book.springboot.domain.PlayList;
 import com.jojoldu.book.springboot.domain.PlayListRepository;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,13 +20,5 @@ public class ApplicationTest {
     public void contextLoads() {
 
     }
-
-//    @Test
-//    public void testInsert2() {
-//        AutoList autoList = new AutoList();
-//        autoList.setSinger("sg워너비");
-//        autoList.setTitle("라라라");
-//        repo.save(autoList);
-//    }
 
 }
