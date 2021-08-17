@@ -13,8 +13,8 @@ import java.sql.Timestamp;
 @Setter
 @ToString
 @Entity
-@Table(name="Autolists")
-public class MusicList {
+@Table(name="autolists")
+public class AutoList {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bno;
@@ -29,3 +29,4 @@ public class MusicList {
     private  Timestamp updatedate;
 
 }
+
