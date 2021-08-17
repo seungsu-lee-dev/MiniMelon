@@ -19,6 +19,7 @@ public class MusicInfoController {
     private static Logger logger = LoggerFactory.getLogger(MusicInfoController.class.getSimpleName());
     MusicInfoDto musicInfoDto = new MusicInfoDto();
     List<MusicInfoDto> searchMusicList = new ArrayList<MusicInfoDto>();
+    List<MusicInfoDto> MusicListsave = new ArrayList<MusicInfoDto>();
     @ResponseBody
     @PostMapping("/musicPlay")
     public String searchMusic(@RequestBody String jsonUri) {
@@ -93,4 +94,13 @@ public class MusicInfoController {
 //        return musicInfoDto.toString();
         return searchMusicList.toString();
     }
+    @ResponseBody
+    @PostMapping("/musicPlaysave")
+    public String musicplaysave() {
+        DatabaseQuery insert = new DatabaseQuery();
+        insert.INSERT();
+        return MusicListsave.toString();
+    }
 }
+
+
