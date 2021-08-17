@@ -10,14 +10,14 @@ import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AutoListRepositoryTest {
+public class PlayListRepositoryTest {
     @Autowired
-    private AutoListRepository AuRepo;
+    private PlayListRepository plRepo;
 
     @Test
     public void inspect() {
         //실제 객체의 클래스 이름
-        Class<?> clz = AuRepo.getClass();
+        Class<?> clz = plRepo.getClass();
         System.out.println(clz.getName());
 
         //클래스가 구현하고 있는 인터페이스 목록
@@ -32,26 +32,26 @@ public class AutoListRepositoryTest {
     //insert 작업
     @Test
     public void testInsert() {
-        AutoList al = new AutoList();
-        al.setSinger("폴킴");
-        al.setTitle("비");
+        PlayList pl = new PlayList();
+        pl.setSinger("장범준");
+        pl.setTitle("노래방에서");
 
-        AuRepo.save(al);
-        System.out.println("insert ok");
+        plRepo.save(pl);
     }
 
     //select 작업
     @Test
     public void testRead() {
-        AuRepo.findById(3L).ifPresent((autoList->{
-            System.out.println(autoList);}));
-        System.out.println("read ok");
+        plRepo.findById(1L).ifPresent((playList -> {
+            System.out.println(playList);
+        }));
     }
 
     //delete 작업
 //    @Test
 //    public void testDelete() {
 //        System.out.println("DELETE Entity");
-//        AuRepo.deleteById(4L);
+//        plRepo.deleteById(1L);
 //    }
 }
+
