@@ -21,12 +21,22 @@ var main = {
             else if (!isPlaying) {
                 $('#player')[0].contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
                 isPlaying = true;
+
+                let singer = document.getElementById('singer').value;
+                let songTitle = document.getElementById('songTitle').value;
+                let searchUri = "";
+
+                searchUri = initialUri + singer + "+" + songTitle;
+                autoList = _this.autoplaysave(searchUri);
+                _this.overlayInfo(autoList, searchIndex);
             }
             else {
                 $('#player')[0].contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
                 isPlaying = false;
             }
         });
+
+
         $('#btn-search').on('click', function () {
             let singer = document.getElementById('singer').value;
             let songTitle = document.getElementById('songTitle').value;
@@ -70,6 +80,17 @@ var main = {
             isPlaying = false;
             _this.overlayInfo(musicList, --searchIndex);
         });
+
+        $('#btn-putPause').on('click', function () {
+            if (musicList==null) {
+                alert("노래를 선택해주세요");
+            }
+            else {
+                _this.myplaysave();
+            }
+        });
+
+        //
     },
     save : function () {
         var data = {
@@ -150,6 +171,56 @@ var main = {
         });
         return obj;
     },
+
+     autoplaysave : function (saveValue){
+        var data = {
+            uri: saveValue
+        };
+        var obj;
+        $.ajax({
+            type: 'POST',
+            url: '/autoPlaysave',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            async: false
+        }).done(function(data) {
+            console.log("searchValue: "+data);
+            obj = JSON.parse(data);
+//            console.log(obj[0].videoTitle);
+//            console.log(obj[0].videoLink);
+//            console.log(obj[0].thumbnailLink);
+        }).fail(function(error) {
+            console.log(error);
+        });
+        return obj;
+    },
+
+    myplaysave : function (){
+        var data = {
+            thumbnailLink:document.getElementById('thumbnail').getAttribute('src'),
+            videoTitle:document.getElementById('videoTitle').innerText,
+            videoLink:document.getElementById('player').getAttribute('src')
+        };
+        var obj;
+        $.ajax({
+            type: 'POST',
+            url: '/myPlaysave',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            async: false
+        }).done(function(data) {
+            console.log("myPlayValue: "+data);
+            obj = JSON.parse(data);
+            console.log(obj.videoTitle);
+            console.log(obj.videoLink);
+            console.log(obj.thumbnailLink);
+        }).fail(function(error) {
+            console.log(error);
+        });
+        return obj;
+    },
+
+
     overlayInfo : function (musicJson, index) {
         document.getElementById("thumbnail").setAttribute("src", musicJson[index].thumbnailLink);
         document.getElementById("videoTitle").innerText = musicJson[index].videoTitle;

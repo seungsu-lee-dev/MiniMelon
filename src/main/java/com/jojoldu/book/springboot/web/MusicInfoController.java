@@ -19,6 +19,10 @@ public class MusicInfoController {
     private static Logger logger = LoggerFactory.getLogger(MusicInfoController.class.getSimpleName());
     MusicInfoDto musicInfoDto = new MusicInfoDto();
     List<MusicInfoDto> searchMusicList = new ArrayList<MusicInfoDto>();
+
+    List<MusicInfoDto> AutoListsave = new ArrayList<MusicInfoDto>();
+    List<MusicInfoDto> PlayListsave = new ArrayList<MusicInfoDto>();
+
     @ResponseBody
     @PostMapping("/musicPlay")
     public String searchMusic(@RequestBody String jsonUri) {
@@ -92,5 +96,26 @@ public class MusicInfoController {
         }
 //        return musicInfoDto.toString();
         return searchMusicList.toString();
+    }
+    @ResponseBody
+    @PostMapping("/autoPlaysave")
+    public String autoplaysave() {
+        AutoDatabaseQuery insert01 = new AutoDatabaseQuery();
+        insert01.INSERT01("","","");
+        return AutoListsave.toString();
+    }
+
+    @ResponseBody
+    @PostMapping("/myPlaysave")
+    public String myplaysave(@RequestBody String jsonData) {
+        logger.info(jsonData);
+        JSONObject dataJObject = new JSONObject(jsonData);
+        String thumbnailUri = dataJObject.getString("thumbnailLink");
+        String title = dataJObject.getString("videoTitle");
+        String videoUri = dataJObject.getString("videoLink");
+
+        PlayDatabaseQuery insert02 = new PlayDatabaseQuery();
+        insert02.INSERT02(title, videoUri, thumbnailUri);
+        return jsonData;
     }
 }
