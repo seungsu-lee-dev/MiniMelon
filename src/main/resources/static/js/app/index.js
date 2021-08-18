@@ -81,7 +81,7 @@ var main = {
             _this.overlayInfo(musicList, --searchIndex);
         });
 
-        $('#btn-putPause').on('click', function () {
+        $('#btn-putMusic').on('click', function () {
             if (musicList==null) {
                 alert("노래를 선택해주세요");
             }
@@ -184,7 +184,7 @@ var main = {
             data: JSON.stringify(data),
             async: false
         }).done(function(data) {
-            console.log("searchValue: "+data);
+            console.log("autoplayValue: "+data);
             obj = JSON.parse(data);
 //            console.log(obj[0].videoTitle);
 //            console.log(obj[0].videoLink);
