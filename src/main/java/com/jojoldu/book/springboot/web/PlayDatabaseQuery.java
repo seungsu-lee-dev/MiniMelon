@@ -2,20 +2,34 @@ package com.jojoldu.book.springboot.web;
 
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.*;
+import java.util.Properties;
 
 public class PlayDatabaseQuery {
     public static Connection makeConnection(){
 
         Connection con = null;
-        String url = "jdbc:mysql://code-and-talk-mini-melondb.cyy4xompg0g1.ap-northeast-2.rds.amazonaws.com:3306/cat_team?autoReconnect=true";
-        String id = "catadmin";
-        String pw = "smartfarm";
+        String resource = "src/main/resources/application-db.properties";
+        Properties properties = new Properties();
+        String url = "";
+        String id = "";
+        String pw = "";
 
         try {
+            FileInputStream fis = new FileInputStream(resource);
+            properties.load(new java.io.BufferedInputStream(fis));
+
+            url = properties.getProperty("spring.datasource.url");
+            id = properties.getProperty("spring.datasource.username");
+            pw = properties.getProperty("spring.datasource.password");
+
             Class.forName("com.mysql.cj.jdbc.Driver");
             System.out.println("드라이버 적재 성공");
             con = DriverManager.getConnection(url, id, pw);
@@ -26,10 +40,14 @@ public class PlayDatabaseQuery {
         }catch(SQLException e) {
 
             System.out.println("연결에 실패하였습니다.");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return con;
     }
-    @GetMapping("/searchMusic/searchMusicList")
+
     public static void INSERT02(String videoTitle, String videoLink, String thumbnailLink){
 
         Connection con = makeConnection();
