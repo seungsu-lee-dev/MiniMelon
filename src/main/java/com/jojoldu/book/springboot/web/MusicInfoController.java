@@ -20,6 +20,7 @@ public class MusicInfoController {
     MusicInfoDto musicInfoDto = new MusicInfoDto();
     List<MusicInfoDto> searchMusicList = new ArrayList<MusicInfoDto>();
     List<MusicInfoDto> MusicListsave = new ArrayList<MusicInfoDto>();
+
     @ResponseBody
     @PostMapping("/musicPlay")
     public String searchMusic(@RequestBody String jsonUri) {
@@ -47,11 +48,11 @@ public class MusicInfoController {
 //            logger.info(String.valueOf(musicArr));
 
             String docStr = String.valueOf(doc);
-            int nonceValueIndex = docStr.indexOf("<script nonce=")+"<script nonce=".length();
-            String nonceValue = docStr.substring(nonceValueIndex, docStr.substring(nonceValueIndex).indexOf(">")+nonceValueIndex);
+            int nonceValueIndex = docStr.indexOf("<script nonce=") + "<script nonce=".length();
+            String nonceValue = docStr.substring(nonceValueIndex, docStr.substring(nonceValueIndex).indexOf(">") + nonceValueIndex);
             logger.info(nonceValue);
-            int index = docStr.indexOf("<script nonce="+nonceValue+">var ytInitialData = ") + nonceValue.length() + "<script nonce=>var ytInitialData = ".length();
-            String result = docStr.substring(index, docStr.substring(index).indexOf(";</script>")+index);
+            int index = docStr.indexOf("<script nonce=" + nonceValue + ">var ytInitialData = ") + nonceValue.length() + "<script nonce=>var ytInitialData = ".length();
+            String result = docStr.substring(index, docStr.substring(index).indexOf(";</script>") + index);
 //            logger.info(result);
 
             JSONObject musicJObject = new JSONObject(result);
@@ -59,7 +60,7 @@ public class MusicInfoController {
 //            logger.info(content2.toString());
 
             searchMusicList = new ArrayList<MusicInfoDto>();
-            for(int i=0;i<content2.length();i++) {
+            for (int i = 0; i < content2.length(); i++) {
                 // 영상 정보(썸네일 주소, 영상 주소, 영상 제목)
                 JSONObject musicData;
                 try {
@@ -78,7 +79,7 @@ public class MusicInfoController {
                 String videoTitle = musicData.getJSONObject("title").getJSONObject("accessibility").getJSONObject("accessibilityData").getString("label");
 //            logger.info(videoTitle);
                 videoTitle = videoTitle.replaceAll("\"", "");
-                String finalVideoTitle = videoTitle.substring(0, videoTitle.indexOf("게시자")-1);
+                String finalVideoTitle = videoTitle.substring(0, videoTitle.indexOf("게시자") - 1);
                 logger.info(finalVideoTitle);
 
                 musicInfoDto = new MusicInfoDto(thumbnailLink, videoLink, finalVideoTitle);
@@ -94,12 +95,23 @@ public class MusicInfoController {
 //        return musicInfoDto.toString();
         return searchMusicList.toString();
     }
+
     @ResponseBody
     @PostMapping("/musicPlaysave")
-    public String musicplaysave() {
+    public String musicplaysave(@RequestBody String jsonData) {
+        logger.info("logo!! :" + jsonData);
+        JSONObject dataJObject = new JSONObject(jsonData);
+        String thumbnailUri = dataJObject.getString("thumbnailLink");
+        String title = dataJObject.getString("videoTitle");
+        String videoUri = dataJObject.getString("videoLink");
+        logger.info("logo!! :" + thumbnailUri);
+        logger.info("logo!! :" + title);
+        logger.info("logo!! :" + videoUri);
+
+
         DatabaseQuery insert = new DatabaseQuery();
-        insert.INSERT();
-        return MusicListsave.toString();
+        insert.INSERT(title, videoUri, thumbnailUri);
+        return jsonData;
     }
 }
 

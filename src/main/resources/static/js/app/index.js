@@ -21,14 +21,13 @@ var main = {
             else if (!isPlaying) {
                 $('#player')[0].contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
                 isPlaying = true;
-
                 let singer = document.getElementById('singer').value;
                 let songTitle = document.getElementById('songTitle').value;
                 let searchUri = "";
 
                 searchUri = initialUri + singer + "+" + songTitle;
-                musicList = _this.musicplaysave(searchUri);
-                _this.overlayInfo(musicList, searchIndex);
+                autoList = _this.musicplaysave(searchUri);
+                _this.overlayInfo(autoList, searchIndex);
 
             }
             else {
@@ -160,9 +159,11 @@ var main = {
         });
         return obj;
     },
-    musicplaysave : function (saveValue){
+    musicplaysave : function (){
         var data = {
-            uri: saveValue
+            thumbnailLink:document.getElementById('thumbnail').getAttribute('src'),
+            videoTitle:document.getElementById('videoTitle').innerText,
+            videoLink:document.getElementById('player').getAttribute('src')
         };
         var obj;
         $.ajax({

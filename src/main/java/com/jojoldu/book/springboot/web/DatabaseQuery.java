@@ -1,19 +1,33 @@
 package com.jojoldu.book.springboot.web;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Reader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.*;
+import java.util.Properties;
 
 public class DatabaseQuery {
     public static Connection makeConnection(){
 
         Connection con = null;
-        String url = "jdbc:mysql://code-and-talk-mini-melondb.cyy4xompg0g1.ap-northeast-2.rds.amazonaws.com:3306/cat_team?autoReconnect=true";
-        String id = "catadmin";
-        String pw = "smartfarm";
+        String resource = "src/main/resources/application-db.properties";
+        Properties properties = new Properties();
+        String url = "";
+        String id = "";
+        String pw = "";
 
         try {
+            FileInputStream fis = new FileInputStream(resource);
+            properties.load(new java.io.BufferedInputStream(fis));
+
+            url = properties.getProperty("spring.datasource.url");
+            id = properties.getProperty("spring.datasource.username");
+            pw = properties.getProperty("spring.datasource.password");
+
             Class.forName("com.mysql.cj.jdbc.Driver");
             System.out.println("드라이버 적재 성공");
             con = DriverManager.getConnection(url, id, pw);
@@ -24,15 +38,15 @@ public class DatabaseQuery {
         }catch(SQLException e) {
 
             System.out.println("연결에 실패하였습니다.");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return con;
     }
 
-    public static void INSERT(){
-
-        String title = "test_title2";
-        String video_link = "test_video_link2";
-        String thumbnail_link = "test_thumbnail_link2";
+    public static void INSERT(String videoTitle, String videoLink, String thumbnailLink){
 
         Connection con = makeConnection();
 
@@ -42,9 +56,9 @@ public class DatabaseQuery {
 
             //PreparedStatement로 쿼리 수행
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, title);
-            pstmt.setString(2, video_link);
-            pstmt.setString(3, thumbnail_link);
+            pstmt.setString(1, videoTitle);
+            pstmt.setString(2, videoLink);
+            pstmt.setString(3, thumbnailLink);
 
             int ret = pstmt.executeUpdate();
             System.out.println(ret);
