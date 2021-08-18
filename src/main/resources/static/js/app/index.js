@@ -5,6 +5,7 @@ var main = {
         let initialUri = "https://www.youtube.com/results?search_query=";
         let searchIndex = 0;
         let musicList;
+        let playUri = "";
         $('#btn-save').on('click', function () {
             _this.save();
         });
@@ -15,10 +16,9 @@ var main = {
             _this.delete();
         });
         $('#btn-playPause').on('click', function () {
-            if (musicList==null) {
+            if (musicList == null) {
                 alert("노래를 검색해주세요");
-            }
-            else if (!isPlaying) {
+            } else if (!isPlaying) {
                 $('#player')[0].contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
                 isPlaying = true;
 
@@ -28,9 +28,8 @@ var main = {
 
                 searchUri = initialUri + singer + "+" + songTitle;
                 autoList = _this.autoplaysave(searchUri);
-                _this.overlayInfo(autoList, searchIndex);
-            }
-            else {
+                playUri = _this.overlayInfo(autoList, searchIndex);
+            } else {
                 $('#player')[0].contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
                 isPlaying = false;
             }
@@ -44,53 +43,69 @@ var main = {
             if (!singer) {
                 alert("가수를 입력해주세요");
                 document.getElementById('singer').focus();
-            }
-            else if (!songTitle) {
+            } else if (!songTitle) {
                 alert("제목을 입력해주세요");
                 document.getElementById('songTitle').focus();
-            }
-            else {
+            } else {
                 searchUri = initialUri + singer + "+" + songTitle;
                 musicList = _this.searchMusic(searchUri);
                 searchIndex = 0;
-                _this.overlayInfo(musicList, searchIndex);
+                playUri = _this.overlayInfo(musicList, searchIndex);
+                _this.resetTime();
             }
         });
         $('#btn-nextMusic').on('click', function () {
-            if (musicList==null) {
+            if (musicList == null) {
                 alert("노래를 검색해주세요");
                 return;
-            }
-            else if (searchIndex==(musicList.length-1)) {
+            } else if (searchIndex == (musicList.length - 1)) {
                 alert("마지막 영상입니다");
                 return;
             }
             isPlaying = false;
-            _this.overlayInfo(musicList, ++searchIndex);
+            playUri = _this.overlayInfo(musicList, ++searchIndex);
+            _this.resetTime();
         });
         $('#btn-previousMusic').on('click', function () {
-            if (musicList==null) {
+            if (musicList == null) {
                 alert("노래를 검색해주세요");
                 return;
-            }
-            else if (!searchIndex) {
+            } else if (!searchIndex) {
                 alert("처음 영상입니다");
                 return;
             }
             isPlaying = false;
-            _this.overlayInfo(musicList, --searchIndex);
+            playUri = _this.overlayInfo(musicList, --searchIndex);
+            _this.resetTime();
         });
 
         $('#btn-putMusic').on('click', function () {
-            if (musicList==null) {
+            if (musicList == null) {
                 alert("노래를 선택해주세요");
-            }
-            else {
+            } else {
                 _this.myplaysave();
             }
         });
 
-        //
+        $("#controlBar").on('input change', function () {
+            let hour = parseInt(this.value/3600);
+            let timeValue = "";
+            if (hour>0) {
+                let minute = parseInt(this.value%60/60);
+                let second = this.value%60;
+                timeValue = hour + "시간 " + minute + "분 " + second + "초";
+            }
+            else {
+                let minute = parseInt(this.value/60);
+                let second = this.value%60;
+                timeValue = minute + "분 " + second + "초";
+            }
+
+            document.getElementById("range_val").setAttribute("value", timeValue);
+            _this.controlTime(playUri, this.value);
+            $('#player')[0].contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            isPlaying = true;
+        });
     },
     save : function () {
         var data = {
@@ -226,7 +241,21 @@ var main = {
         document.getElementById("videoTitle").innerText = musicJson[index].videoTitle;
         let link = "https://www.youtube.com/embed/" + musicJson[index].videoLink + "?autoplay=0&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + musicJson[index].videoLink;
         document.getElementById("player").setAttribute("src", link);
+        document.getElementById("controlBar").setAttribute("style", "");
+        document.getElementById("controlBar").setAttribute("max", musicJson[index].second);
+        document.getElementById("range_val").setAttribute("style", "");
+        return musicJson[index].videoLink;
+    },
+    controlTime:function (playUri, second) {
+        document.getElementById("player").setAttribute("src", "https://www.youtube.com/embed/" + playUri + "?start="+second+"&autoplay=1&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + playUri);
+    },
+    resetTime:function() {
+        document.getElementById('range_val').innerHTML=0;
+        let timeValue = "0분 0초";
+        document.getElementById("range_val").setAttribute("value", timeValue);
+        document.getElementById("resetForm").reset();
     }
+
 };
 
 main.init();

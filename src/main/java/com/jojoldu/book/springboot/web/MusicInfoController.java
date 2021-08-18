@@ -84,7 +84,41 @@ public class MusicInfoController {
                 String finalVideoTitle = videoTitle.substring(0, videoTitle.indexOf("게시자")-1);
                 logger.info(finalVideoTitle);
 
-                musicInfoDto = new MusicInfoDto(thumbnailLink, videoLink, finalVideoTitle);
+                String time = musicData.getJSONObject("lengthText").getJSONObject("accessibility").getJSONObject("accessibilityData").getString("label");
+                logger.info("시간: "+time);
+                int hourIndex = 0;
+                int hour = 0;
+                if (time.contains("시간")) {
+                    hourIndex = time.indexOf("시간");
+                    hour = Integer.parseInt(time.substring(0,hourIndex));
+                }
+
+                int minuteIndex = 0;
+                int minute = 0;
+                if (time.contains("분")) {
+                    minuteIndex = time.indexOf("분");
+                    if (hourIndex>0) {
+                        minute = Integer.parseInt(time.substring(hourIndex+3,minuteIndex));
+                    }
+                    else {
+                        minute = Integer.parseInt(time.substring(0,minuteIndex));
+                    }
+                }
+                int secondIndex = time.indexOf("초");
+                int second = 0;
+                if (minuteIndex>0) {
+                    second = Integer.parseInt(time.substring(minuteIndex+2, secondIndex));
+                }
+                else if (hourIndex>0) {
+                    second = Integer.parseInt(time.substring(hourIndex+3, secondIndex));
+                }
+                else {
+                    second = Integer.parseInt(time.substring(0, secondIndex));
+                }
+                int secondResult = hour *3600 + minute * 60 + second;
+                logger.info("초: "+secondResult);
+
+                musicInfoDto = new MusicInfoDto(thumbnailLink, videoLink, finalVideoTitle, secondResult);
                 logger.info(musicInfoDto.toString());
 
                 searchMusicList.add(musicInfoDto);

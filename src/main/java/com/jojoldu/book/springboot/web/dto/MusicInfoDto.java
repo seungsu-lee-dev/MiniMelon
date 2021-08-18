@@ -4,6 +4,7 @@ public class MusicInfoDto {
     String thumbnailLink;
     String videoLink;
     String videoTitle;
+    int second;
 
     public MusicInfoDto() {
 
@@ -33,11 +34,20 @@ public class MusicInfoDto {
         this.videoTitle = videoTitle;
     }
 
-    public MusicInfoDto(String thumbnailLink, String videoLink, String videoTitle) {
+    public int getSecond() {
+        return second;
+    }
+
+    public void setSecond(int second) {
+        this.second = second;
+    }
+
+    public MusicInfoDto(String thumbnailLink, String videoLink, String videoTitle, int second) {
         super();
         this.thumbnailLink = thumbnailLink;
         this.videoLink = videoLink;
         this.videoTitle = videoTitle;
+        this.second = second;
     }
 
     @Override
@@ -46,6 +56,7 @@ public class MusicInfoDto {
                 "\"thumbnailLink\": " + "\"" + thumbnailLink + "\"" +
                 ", \"videoLink\": " + "\"" + videoLink + "\"" +
                 ", \"videoTitle\": " + "\"" + videoTitle + "\"" +
+                ", \"second\": " + "\"" + second + "\"" +
                 "}";
     }
 }
