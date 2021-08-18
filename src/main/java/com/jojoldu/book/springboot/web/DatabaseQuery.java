@@ -51,7 +51,7 @@ public class DatabaseQuery {
         Connection con = makeConnection();
 
         try {
-            String query = "INSERT INTO testlist (title, video_link, thumbnail_link) " +
+            String query = "INSERT INTO autolists (title, video_link, thumbnail_link) " +
                     "VALUES (?, ?, ?)";
 
             //PreparedStatement로 쿼리 수행

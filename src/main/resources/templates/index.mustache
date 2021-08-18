@@ -3,52 +3,13 @@
         <h1>
             CAT(Code & Talk) Team
         </h1>
-        <div class="row">
-            <div class="col-md-6">
-                <h2>미니 멜론</h2>
-                <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
-            </div>
-        </div>
+<!--        <div class="row">-->
+<!--            <div class="col-md-6">-->
+<!--                <h2>미니 멜론</h2>-->
+<!--                <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>-->
+<!--            </div>-->
+<!--        </div>-->
         <br>
-        <!-- 목록 출력 영역-->
-        <table class="table table-horizontal table-bordered">
-            <thead class="thead-strong">
-            <tr>
-                <th>
-                    게시글번호
-                </th>
-                <th>
-                    제목
-                </th>
-                <th>
-                    작성자
-                </th>
-                <th>
-                    최종수정일
-                </th>
-            </tr>
-            </thead>
-            <tbody id="tbody">
-            {{#posts}}
-                <tr>
-                    <td>
-                        {{id}}
-                    </td>
-                    <td>
-                        <a href="/posts/update/{{id}}">
-                            {{title}}
-                        </a>
-                    </td>
-                    <td>
-                        {{author}}
-                    </td>
-                    <td>
-                        {{modifiedDate}}
-                    </td>
-                </tr>
-            {{/posts}}
-            </tbody>
-        </table>
         <div class="form-group row justify-content-center">
             <div class="w300" style="padding-right:10px">
                 <input type="text" class="form-control form-control-sm" name="singer" id="singer" placeholder="가수">
@@ -67,8 +28,43 @@
         <button type="button" class="btn btn-primary" id="btn-previousMusic">이전 곡</button>
         <button type="button" class="btn btn-primary" id="btn-playPause">재생/정지</button>
         <button type="button" class="btn btn-primary" id="btn-nextMusic">다음 곡</button>
+        <br>
     </div>
+
 
 <iframe style="display:none" allowfullscreen="1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"  frameborder="0" width="100" height="100" id="player" src="">
 </iframe>
+<!-- 목록 출력 영역-->
+<table class="table table-horizontal table-bordered" style="width: 30%">
+    <thead class="thead-strong">
+    <tr>
+        <th style="text-align: center">
+            Title
+        </th>
+<!--        <th>-->
+<!--            Singer-->
+<!--        </th>-->
+<!--        <th>-->
+<!--            작성자-->
+<!--        </th>-->
+<!--        <th>-->
+<!--            최종수정일-->
+<!--        </th>-->
+    </tr>
+    </thead>
+    <tbody id="tbody">
+    {{#posts}}
+        <tr>
+            <td>
+                {{id}}
+            </td>
+            <td>
+                <a href="/posts/update/{{id}}">
+                    {{title}}
+                </a>
+            </td>
+        </tr>
+    {{/posts}}
+    </tbody>
+</table>
 {{>layout/footer}}
