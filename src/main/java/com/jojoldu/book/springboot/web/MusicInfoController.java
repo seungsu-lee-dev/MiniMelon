@@ -61,6 +61,13 @@ public class MusicInfoController {
             JSONArray content2 = musicJObject.getJSONObject("contents").getJSONObject("twoColumnSearchResultsRenderer").getJSONObject("primaryContents").getJSONObject("sectionListRenderer").getJSONArray("contents").getJSONObject(0).getJSONObject("itemSectionRenderer").getJSONArray("contents");
 //            logger.info(content2.toString());
 
+            // 상단 광고 피하기
+            logger.info(content2.getJSONObject(0).keySet().toString());
+            if (content2.getJSONObject(0).keySet().contains("promotedSparklesTextSearchRenderer")) {
+                logger.info("상단 광고 표시");
+                content2 = musicJObject.getJSONObject("contents").getJSONObject("twoColumnSearchResultsRenderer").getJSONObject("primaryContents").getJSONObject("sectionListRenderer").getJSONArray("contents").getJSONObject(1).getJSONObject("itemSectionRenderer").getJSONArray("contents");
+            }
+
             searchMusicList = new ArrayList<MusicInfoDto>();
             for(int i=0;i<content2.length();i++) {
                 // 영상 정보(썸네일 주소, 영상 주소, 영상 제목)
