@@ -1,6 +1,9 @@
 package com.jojoldu.book.springboot.web;
 
+import com.jojoldu.book.springboot.service.posts.PostsService;
 import com.jojoldu.book.springboot.web.dto.MusicInfoDto;
+import com.jojoldu.book.springboot.web.dto.PostsSaveRequestDto;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -20,6 +23,7 @@ public class MusicInfoController {
     MusicInfoDto musicInfoDto = new MusicInfoDto();
     List<MusicInfoDto> searchMusicList = new ArrayList<MusicInfoDto>();
     List<MusicInfoDto> MusicListsave = new ArrayList<MusicInfoDto>();
+
 
     @ResponseBody
     @PostMapping("/musicPlay")
@@ -99,6 +103,7 @@ public class MusicInfoController {
     @ResponseBody
     @PostMapping("/musicPlaysave")
     public String musicplaysave(@RequestBody String jsonData) {
+
         logger.info("logo!! :" + jsonData);
         JSONObject dataJObject = new JSONObject(jsonData);
         String thumbnailUri = dataJObject.getString("thumbnailLink");
@@ -113,6 +118,15 @@ public class MusicInfoController {
         insert.INSERT(title, videoUri, thumbnailUri);
         return jsonData;
     }
+
+//    @ResponseBody
+//    @PostMapping("/autoPlaysave")
+//    public String autoplaysave(@RequestBody String jsonData) {
+//        logger.info("logo!!!!!!!!!!!!! :" + jsonData);
+//        return jsonData;
+//    }
+
+
 }
 
 

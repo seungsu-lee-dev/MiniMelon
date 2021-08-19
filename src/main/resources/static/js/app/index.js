@@ -5,6 +5,8 @@ var main = {
         let initialUri = "https://www.youtube.com/results?search_query=";
         let searchIndex = 0;
         let musicList;
+        var autolistArray = new Array();
+        var autolistNum = 0;
         $('#btn-save').on('click', function () {
             _this.save();
         });
@@ -27,7 +29,35 @@ var main = {
 
                 searchUri = initialUri + singer + "+" + songTitle;
                 autoList = _this.musicplaysave(searchUri);
+                console.log("autoList: "+autoList);
+
+                const videoTitle = document.getElementById('videoTitle').innerText;
+                console.log("videoTitle: "+videoTitle);
+                const tableBody = document.querySelector("#tbody");
+                console.log("tableBody: " + tableBody);
+                let tr = document.createElement("tr");
+                tr.setAttribute("id", "trr");
+                let td = document.createElement("td");
+                td.setAttribute("id", "trc");
+                td.innerText = videoTitle;
+                // var Test = document.getElementById("td")
+                // Test.click(function (){
+                //     alert("테스트")
+                // });
+                tr.appendChild(td);
+                tableBody.appendChild(tr);
+                tableBody.appendChild(td);
+
+                document.getElementById("trc").addEventListener('click',Test);
+                function Test(){
+                    searchUri = initialUri + singer + "+" + songTitle;
+                    autoList = _this.musicplaysave(searchUri);
+                    _this.overlayInfo(autoList, searchIndex);
+                };
+
                 _this.overlayInfo(autoList, searchIndex);
+                // document.querySelector(".tr").appendChild(td);
+                // document.getElementById("title").innerText = videoTitle;
 
             }
             else {
@@ -35,6 +65,7 @@ var main = {
                 isPlaying = false;
             }
         });
+
 
         $('#btn-search').on('click', function () {
             let singer = document.getElementById('singer').value;
@@ -80,6 +111,7 @@ var main = {
             _this.overlayInfo(musicList, --searchIndex);
         });
     },
+
     save : function () {
         var data = {
             title: $('#title').val(),
@@ -176,14 +208,42 @@ var main = {
         }).done(function(data) {
             console.log("searchValue: "+data);
             obj = JSON.parse(data);
-            console.log(obj[0].videoTitle);
-            console.log(obj[0].videoLink);
-            console.log(obj[0].thumbnailLink);
+            // console.log(obj[0].videoTitle);
+            // console.log(obj[0].videoLink);
+            // console.log(obj[0].thumbnailLink);
         }).fail(function(error) {
             console.log(error);
         });
         return obj;
     },
+    testFunc : function (){
+        console.log("test");
+    },
+
+
+    // autoplaysave : function (){
+    //     var data = {
+    //         videoTitle:document.getElementById('videoTitle').innerText,
+    //     };
+    //     var obj;
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: '/autoPlaysave',
+    //         // dataType: 'string',
+    //         contentType: 'application/json; charset=utf-8',
+    //         data: JSON.stringify(data),
+    //         async: false
+    //     }).done(function(data) {
+    //         console.log("searchValue: "+data);
+    //         obj = JSON.parse(data);
+    //         console.log(obj[0].videoTitle);
+    //     }).fail(function(error) {
+    //         console.log(error);
+    //     });
+    //     return obj;
+    // },
+
+
 
     overlayInfo : function (musicJson, index) {
         document.getElementById("thumbnail").setAttribute("src", musicJson[index].thumbnailLink);
