@@ -90,7 +90,19 @@ var main = {
             }
         });
 
-        //
+        $('#btn-createList').on('click', function listInput(newListName) {
+            var newListName = prompt('... 새로운 플레이리스트 이름을 입력하세요 ...');
+            alert(newListName);
+
+            if(newListName == "") {
+                alert('새로운 플레이리스트 이름을 입력하세요.');
+                return;
+            }
+            else {
+                _this.listInput(newListName);
+                alert('새로운 플레이리스트를 생성하였습니다.');
+            }
+        });
     },
     save : function () {
         var data = {
@@ -184,7 +196,7 @@ var main = {
             data: JSON.stringify(data),
             async: false
         }).done(function(data) {
-            console.log("autoplayValue: "+data);
+            console.log("autoPlayValue: "+data);
             obj = JSON.parse(data);
 //            console.log(obj[0].videoTitle);
 //            console.log(obj[0].videoLink);
@@ -220,6 +232,24 @@ var main = {
         return obj;
     },
 
+    listInput : function (newListName) {
+        var data = {
+            String : newListName
+        };
+
+        var obj;
+        $.ajax({
+            type: 'POST',
+            url: '/createTable',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+        }).done(function() {
+            alert('테이블이 생성되었습니다.');
+            window.location.href = '/';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    },
 
     overlayInfo : function (musicJson, index) {
         document.getElementById("thumbnail").setAttribute("src", musicJson[index].thumbnailLink);
