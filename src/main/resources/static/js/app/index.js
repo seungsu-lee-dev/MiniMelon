@@ -6,6 +6,7 @@ var main = {
         let searchIndex = 0;
         let musicList;
         let playUri = "";
+        let timerId = 0;
         $('#btn-save').on('click', function () {
             _this.save();
         });
@@ -27,11 +28,24 @@ var main = {
                 let searchUri = "";
 
                 searchUri = initialUri + singer + "+" + songTitle;
-                autoList = _this.autoplaysave(searchUri);
-                playUri = _this.overlayInfo(autoList, searchIndex);
+                _this.autoplaysave(searchUri);
+
+                const videoTitle = document.getElementById('videoTitle').innerText;
+                console.log("videoTitle: "+videoTitle);
+                const tableBody = document.querySelector("#tbody");
+                console.log("tableBody: " + tableBody);
+                let tr = document.createElement("tr");
+                let td = document.createElement("td");
+                td.innerText = videoTitle;
+                tr.appendChild(td);
+                tableBody.appendChild(tr);
+                startTimer();
             } else {
                 $('#player')[0].contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
                 isPlaying = false;
+                if (timerId) {
+                    clearInterval(timerId);
+                }
             }
         });
 
@@ -50,6 +64,7 @@ var main = {
                 searchUri = initialUri + singer + "+" + songTitle;
                 musicList = _this.searchMusic(searchUri);
                 searchIndex = 0;
+                isPlaying = false;
                 playUri = _this.overlayInfo(musicList, searchIndex);
                 _this.resetTime();
             }
@@ -88,6 +103,10 @@ var main = {
         });
 
         $("#controlBar").on('input change', function () {
+            if (timerId) {
+                clearInterval(timerId);
+            }
+            startTimer();
             let hour = parseInt(this.value/3600);
             let timeValue = "";
             if (hour>0) {
@@ -106,6 +125,25 @@ var main = {
             $('#player')[0].contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
             isPlaying = true;
         });
+
+        function startTimer() {
+            let secondResult = document.getElementById('controlBar').getAttribute('max');
+            let presentSecond = document.getElementById('controlBar').value;
+            console.log("presentSecond: " + presentSecond);
+            timerId = setInterval(function () {
+                presentSecond++;
+                _this.moveControlBar(presentSecond+0);
+            }, 1000);
+            console.log("presentSecond: "+ presentSecond);
+            console.log("secondResult: " + secondResult);
+            setTimeout(function () {
+                clearInterval(timerId);
+                isPlaying=false;
+                _this.resetTime();
+                timerId = 0;
+            }, (secondResult-presentSecond)*1000);
+
+        };
     },
     save : function () {
         var data = {
@@ -201,9 +239,9 @@ var main = {
         }).done(function(data) {
             console.log("autoplayValue: "+data);
             obj = JSON.parse(data);
-//            console.log(obj[0].videoTitle);
-//            console.log(obj[0].videoLink);
-//            console.log(obj[0].thumbnailLink);
+           // console.log(obj[0].videoTitle);
+           // console.log(obj[0].videoLink);
+           // console.log(obj[0].thumbnailLink);
         }).fail(function(error) {
             console.log(error);
         });
@@ -211,7 +249,7 @@ var main = {
     },
 
     myplaysave : function (){
-        var data = {
+        let data = {
             thumbnailLink:document.getElementById('thumbnail').getAttribute('src'),
             videoTitle:document.getElementById('videoTitle').innerText,
             videoLink:document.getElementById('player').getAttribute('src')
@@ -237,6 +275,7 @@ var main = {
 
 
     overlayInfo : function (musicJson, index) {
+
         document.getElementById("thumbnail").setAttribute("src", musicJson[index].thumbnailLink);
         document.getElementById("videoTitle").innerText = musicJson[index].videoTitle;
         let link = "https://www.youtube.com/embed/" + musicJson[index].videoLink + "?autoplay=0&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + musicJson[index].videoLink;
@@ -254,6 +293,25 @@ var main = {
         let timeValue = "0분 0초";
         document.getElementById("range_val").setAttribute("value", timeValue);
         document.getElementById("resetForm").reset();
+    },
+    moveControlBar:function(secondSum) {
+        console.log("second: " + secondSum);
+        document.getElementById('range_val').innerHTML = secondSum;
+        document.getElementById('controlBar').setAttribute("value", secondSum);
+
+        let hour = parseInt(secondSum/3600);
+        let timeValue = "";
+        if (hour>0) {
+            let minute = parseInt(secondSum%60/60);
+            let second = secondSum%60;
+            timeValue = hour + "시간 " + minute + "분 " + second + "초";
+        }
+        else {
+            let minute = parseInt(secondSum/60);
+            let second = secondSum%60;
+            timeValue = minute + "분 " + second + "초";
+        }
+        document.getElementById("range_val").setAttribute("value", timeValue);
     }
 
 };

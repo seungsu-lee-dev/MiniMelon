@@ -111,16 +111,20 @@ public class MusicInfoController {
                         minute = Integer.parseInt(time.substring(0,minuteIndex));
                     }
                 }
-                int secondIndex = time.indexOf("초");
+                int secondIndex = 0;
                 int second = 0;
-                if (minuteIndex>0) {
-                    second = Integer.parseInt(time.substring(minuteIndex+2, secondIndex));
-                }
-                else if (hourIndex>0) {
-                    second = Integer.parseInt(time.substring(hourIndex+3, secondIndex));
-                }
-                else {
-                    second = Integer.parseInt(time.substring(0, secondIndex));
+                if (time.contains("초")) {
+                    secondIndex = time.indexOf("초");
+                    if (minuteIndex>0) {
+                        second = Integer.parseInt(time.substring(minuteIndex+2, secondIndex));
+                    }
+                    else if (hourIndex>0) {
+                        second = Integer.parseInt(time.substring(hourIndex+3, secondIndex));
+                    }
+                    else {
+                        second = Integer.parseInt(time.substring(0, secondIndex));
+                    }
+
                 }
                 int secondResult = hour *3600 + minute * 60 + second;
                 logger.info("초: "+secondResult);
