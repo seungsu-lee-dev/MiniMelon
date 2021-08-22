@@ -1,5 +1,6 @@
 package com.jojoldu.book.springboot.web;
 
+import com.jojoldu.book.springboot.service.posts.MyMusicPlaysService;
 import com.jojoldu.book.springboot.web.dto.PostsResponseDto;
 import com.jojoldu.book.springboot.service.posts.PostsService;
 import lombok.RequiredArgsConstructor;
@@ -12,10 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class IndexController {
     private final PostsService postsService;
+    private final MyMusicPlaysService myMusicPlaysService;
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("posts", postsService.findAllDesc());
+        model.addAttribute("myMusicPlays", myMusicPlaysService.findAllDesc());
         return "index";
     }
     @GetMapping("/posts/save")
