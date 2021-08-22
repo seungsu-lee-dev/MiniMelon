@@ -5,9 +5,11 @@ var main = {
         let initialUri = "https://www.youtube.com/results?search_query=";
         let searchIndex = 0;
         let musicList;
-        let autolistArray = new Array();
+        let autolistArray = [];
         let autolistNum = 0;
         let autoList;
+        //let autoListIndex = 0;
+
 
         $('#btn-save').on('click', function () {
             _this.save();
@@ -43,21 +45,21 @@ var main = {
                 autolistArray[autolistNum] = searchUri;
                 autolistNum++;
                 td.innerText = videoTitle;
-
                 tr.appendChild(td);
                 tableBody.appendChild(tr);
                 tableBody.appendChild(td);
 
                 console.log("autoListArray length: " + autolistArray.length);
+
                 for(let i = 0; i<autolistArray.length; i++){
                     document.getElementById("trc"+i).addEventListener('click',Test);
                     function Test(){
                         autoList = _this.searchMusic(autolistArray[i]);
                         searchIndex = 0;
+                        //autoListIndex = 0;
                         _this.overlayInfo(autoList, searchIndex);
                         }
                     }
-
                 // document.querySelector(".tr").appendChild(td);
                 // document.getElementById("title").innerText = videoTitle;
 
@@ -100,6 +102,7 @@ var main = {
             }
             isPlaying = false;
             _this.overlayInfo(musicList, ++searchIndex);
+            //++autoListIndex;
         });
         $('#btn-previousMusic').on('click', function () {
             if (musicList==null) {
@@ -112,6 +115,7 @@ var main = {
             }
             isPlaying = false;
             _this.overlayInfo(musicList, --searchIndex);
+            //--autoListIndex;
         });
     },
 
