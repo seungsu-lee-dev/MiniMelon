@@ -7,6 +7,7 @@ var main = {
         let musicList;
         let playUri = "";
         let timerId = 0;
+        let timerId2 = 0;
         $('#btn-save').on('click', function () {
             _this.save();
         });
@@ -43,14 +44,16 @@ var main = {
             } else {
                 $('#player')[0].contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
                 isPlaying = false;
-                if (timerId) {
+                if (timerId!=0) {
                     clearInterval(timerId);
                 }
             }
         });
 
-
         $('#btn-search').on('click', function () {
+            if (timerId!=0) {
+                clearInterval(timerId);
+            }
             let singer = document.getElementById('singer').value;
             let songTitle = document.getElementById('songTitle').value;
             let searchUri = "";
@@ -70,6 +73,9 @@ var main = {
             }
         });
         $('#btn-nextMusic').on('click', function () {
+            if (timerId!=0) {
+                clearInterval(timerId);
+            }
             if (musicList == null) {
                 alert("노래를 검색해주세요");
                 return;
@@ -82,6 +88,9 @@ var main = {
             _this.resetTime();
         });
         $('#btn-previousMusic').on('click', function () {
+            if (timerId!=0) {
+                clearInterval(timerId);
+            }
             if (musicList == null) {
                 alert("노래를 검색해주세요");
                 return;
@@ -103,7 +112,7 @@ var main = {
         });
 
         $("#controlBar").on('input change', function () {
-            if (timerId) {
+            if (timerId!=0) {
                 clearInterval(timerId);
             }
             startTimer();
@@ -127,22 +136,26 @@ var main = {
         });
 
         function startTimer() {
+            if (timerId2!=0) {
+                clearTimeout(timerId2);
+            }
             let secondResult = document.getElementById('controlBar').getAttribute('max');
             let presentSecond = document.getElementById('controlBar').value;
-            console.log("presentSecond: " + presentSecond);
+            console.log("timerId: " + timerId);
             timerId = setInterval(function () {
                 presentSecond++;
                 _this.moveControlBar(presentSecond+0);
             }, 1000);
+            console.log("timerId: " + timerId);
             console.log("presentSecond: "+ presentSecond);
             console.log("secondResult: " + secondResult);
-            setTimeout(function () {
+            timerId2 = setTimeout(function () {
                 clearInterval(timerId);
                 isPlaying=false;
                 _this.resetTime();
                 timerId = 0;
-            }, (secondResult-presentSecond)*1000);
-
+                console.log(timerId + " Timer Reset");
+            }, (secondResult-presentSecond+0)*1000);
         };
     },
     save : function () {
@@ -289,10 +302,10 @@ var main = {
         document.getElementById("player").setAttribute("src", "https://www.youtube.com/embed/" + playUri + "?start="+second+"&autoplay=1&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + playUri);
     },
     resetTime:function() {
-        document.getElementById('range_val').innerHTML=0;
+        document.getElementById("resetForm").reset();
+        document.getElementById('controlBar').setAttribute("value","0");
         let timeValue = "0분 0초";
         document.getElementById("range_val").setAttribute("value", timeValue);
-        document.getElementById("resetForm").reset();
     },
     moveControlBar:function(secondSum) {
         console.log("second: " + secondSum);
@@ -311,6 +324,7 @@ var main = {
             let second = secondSum%60;
             timeValue = minute + "분 " + second + "초";
         }
+        document.getElementById("resetForm").reset();
         document.getElementById("range_val").setAttribute("value", timeValue);
     }
 
