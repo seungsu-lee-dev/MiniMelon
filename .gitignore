@@ -2,6 +2,7 @@
 .idea
 
 application-db.properties
+application-oauth.properties
 
 build
 out
