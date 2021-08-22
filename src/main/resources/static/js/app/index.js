@@ -5,6 +5,8 @@ var main = {
         let initialUri = "https://www.youtube.com/results?search_query=";
         let searchIndex = 0;
         let musicList;
+        let playListName = "";
+        let playList = "";
         let playUri = "";
         let timerId = 0;
         let timerId2 = 0;
@@ -18,7 +20,7 @@ var main = {
             _this.delete();
         });
         $('#btn-playPause').on('click', function () {
-            if (musicList == null) {
+            if (musicList==null) {
                 alert("노래를 검색해주세요");
             } else if (!isPlaying) {
                 $('#player')[0].contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
@@ -76,10 +78,10 @@ var main = {
             if (timerId!=0) {
                 clearInterval(timerId);
             }
-            if (musicList == null) {
+            if (musicList==null) {
                 alert("노래를 검색해주세요");
                 return;
-            } else if (searchIndex == (musicList.length - 1)) {
+            } else if (searchIndex==(musicList.length-1)) {
                 alert("마지막 영상입니다");
                 return;
             }
@@ -91,7 +93,7 @@ var main = {
             if (timerId!=0) {
                 clearInterval(timerId);
             }
-            if (musicList == null) {
+            if (musicList==null) {
                 alert("노래를 검색해주세요");
                 return;
             } else if (!searchIndex) {
@@ -104,10 +106,17 @@ var main = {
         });
 
         $('#btn-putMusic').on('click', function () {
-            if (musicList == null) {
+            if (musicList==null) {
                 alert("노래를 선택해주세요");
-            } else {
-                _this.myplaysave();
+            }
+            else {
+                _this.myplaysave(playListName);
+                const selectBody = document.querySelector("#sbody");
+                let tr = document.createElement("tr");
+                let td = document.createElement("td");
+                td.innerText = document.getElementById('videoTitle').innerText;
+                tr.appendChild(td);
+                selectBody.appendChild(tr);
             }
         });
 
@@ -157,6 +166,47 @@ var main = {
                 console.log(timerId + " Timer Reset");
             }, (secondResult-presentSecond+0)*1000);
         };
+
+        $('#btn-createList').on('click', function listInput(newListName) {
+            var newListName = prompt('... 새로운 플레이리스트 이름을 입력하세요 ...');
+            alert(newListName);
+
+            if(newListName == "") {
+                alert('새로운 플레이리스트 이름을 입력하세요.');
+                return;
+            }
+            else {
+                _this.listInput(newListName);
+                alert('새로운 플레이리스트를 생성하였습니다.');
+                _this.mainlistInput(newListName);
+                _this.myplaysave(newListName);
+            }
+        });
+
+        $('.hideA').on('click', function () {
+            document.getElementById("mTable").setAttribute("style", "display:none");
+            document.getElementById("lTable").setAttribute("style", "display:");
+            playListName = $(this).text().trim();
+            console.log("playListName: " + playListName);
+
+            const selectBody = document.querySelector("#sbody");
+            console.log("selectBody: " + selectBody);
+
+            playList = _this.selectlistInput(playListName);
+
+            console.log(playList[0]);
+            console.log(playList[0].videoTitle);
+            let playListLength = Object.keys(playList).length;
+            console.log("playListLength: " + playListLength);
+
+            for (let i=0;i<playListLength;i++) {
+                let tr = document.createElement("tr");
+                let td = document.createElement("td");
+                td.innerText = playList[i].videoTitle;
+                tr.appendChild(td);
+                selectBody.appendChild(tr);
+            }
+        });
     },
     save : function () {
         var data = {
@@ -220,7 +270,7 @@ var main = {
         };
         var obj;
         $.ajax({
-           type: 'POST',
+            type: 'POST',
             url: '/musicPlay',
             // dataType: 'string',
             contentType: 'application/json; charset=utf-8',
@@ -238,7 +288,7 @@ var main = {
         return obj;
     },
 
-     autoplaysave : function (saveValue){
+    autoplaysave : function (saveValue){
         var data = {
             uri: saveValue
         };
@@ -250,19 +300,20 @@ var main = {
             data: JSON.stringify(data),
             async: false
         }).done(function(data) {
-            console.log("autoplayValue: "+data);
+            console.log("autoPlayValue: "+data);
             obj = JSON.parse(data);
-           // console.log(obj[0].videoTitle);
-           // console.log(obj[0].videoLink);
-           // console.log(obj[0].thumbnailLink);
+//            console.log(obj[0].videoTitle);
+//            console.log(obj[0].videoLink);
+//            console.log(obj[0].thumbnailLink);
         }).fail(function(error) {
             console.log(error);
         });
         return obj;
     },
 
-    myplaysave : function (){
-        let data = {
+    myplaysave : function (newListName){
+        var data = {
+            String : newListName,
             thumbnailLink:document.getElementById('thumbnail').getAttribute('src'),
             videoTitle:document.getElementById('videoTitle').innerText,
             videoLink:document.getElementById('player').getAttribute('src')
@@ -286,9 +337,60 @@ var main = {
         return obj;
     },
 
+    listInput : function (newListName) {
+        var data = {
+            String : newListName
+        };
+
+        var obj;
+        $.ajax({
+            type: 'POST',
+            url: '/createTable',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+        }).done(function() {
+//            alert('테이블이 생성되었습니다.');
+            window.location.href = '/';
+        }).fail(function (error) {
+            alert(JSON.stringify(error));
+        });
+    },
+
+    mainlistInput : function(newListName) {
+        var data = { String : newListName };
+        var obj;
+        $.ajax({
+            type: 'POST',
+            url: '/insertListTable',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            async: false
+        }).done(function() {
+            window.location.href = '/';
+        }).fail(function(error) {
+            console.log(error);
+        });
+        return obj;
+    },
+
+    selectlistInput : function(newListName) {
+        var data = { String : newListName };
+        var obj;
+        $.ajax({
+            type: 'POST',
+            url: '/selectTable',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            async: false
+        }).done(function(data) {
+            obj = JSON.parse(data);
+        }).fail(function(error) {
+            console.log(error);
+        });
+        return obj;
+    },
 
     overlayInfo : function (musicJson, index) {
-
         document.getElementById("thumbnail").setAttribute("src", musicJson[index].thumbnailLink);
         document.getElementById("videoTitle").innerText = musicJson[index].videoTitle;
         let link = "https://www.youtube.com/embed/" + musicJson[index].videoLink + "?autoplay=0&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + musicJson[index].videoLink;
@@ -298,15 +400,22 @@ var main = {
         document.getElementById("range_val").setAttribute("style", "");
         return musicJson[index].videoLink;
     },
+
+    hideTable : function () {
+        document.getElementById("hideTr").setAttribute("style", "display:none");
+    },
+
     controlTime:function (playUri, second) {
         document.getElementById("player").setAttribute("src", "https://www.youtube.com/embed/" + playUri + "?start="+second+"&autoplay=1&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + playUri);
     },
+
     resetTime:function() {
         document.getElementById("resetForm").reset();
         document.getElementById('controlBar').setAttribute("value","0");
         let timeValue = "0분 0초";
         document.getElementById("range_val").setAttribute("value", timeValue);
     },
+
     moveControlBar:function(secondSum) {
         console.log("second: " + secondSum);
         document.getElementById('range_val').innerHTML = secondSum;
@@ -314,12 +423,12 @@ var main = {
 
         let hour = parseInt(secondSum/3600);
         let timeValue = "";
+
         if (hour>0) {
             let minute = parseInt(secondSum%60/60);
             let second = secondSum%60;
             timeValue = hour + "시간 " + minute + "분 " + second + "초";
-        }
-        else {
+        } else {
             let minute = parseInt(secondSum/60);
             let second = secondSum%60;
             timeValue = minute + "분 " + second + "초";
@@ -329,5 +438,4 @@ var main = {
     }
 
 };
-
 main.init();
