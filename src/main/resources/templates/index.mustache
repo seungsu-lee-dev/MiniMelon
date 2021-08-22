@@ -1,126 +1,82 @@
 {{>layout/header}}
-<div class="col-md-12">
-    <h1>
-        CAT(Code & Talk) Team
-    </h1>
-    <div class="row">
-        <div class="col-md-6">
-            <h2>미니 멜론</h2>
+    <div class="col-md-12">
+        <h1>
+            CAT(Code & Talk) Team
+        </h1>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>미니 멜론</h2>
+                <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
+                {{#userName}}
+                    Logged in as: <span id="user">{{userName}}</span>
+                    <a href="/logout" class="btn btn-info active" role="button">Logout</a>
+                {{/userName}}
+                {{^userName}}
+                    <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
+                    <a href="/oauth2/authorization/naver" class="btn btn-secondary active" role="button">Naver Login</a>
+                {{/userName}}
+            </div>
         </div>
-    </div>
-    <br>
-    <div class="form-group row justify-content-center">
-        <div class="w300" style="padding-right:10px">
-            <input type="text" class="form-control form-control-sm" name="singer" id="singer" placeholder="가수">
+        <br>
+        <!-- 목록 출력 영역-->
+        <table class="table table-horizontal table-bordered">
+            <thead class="thead-strong">
+            <tr>
+                <th>
+                    게시글번호
+                </th>
+                <th>
+                    제목
+                </th>
+                <th>
+                    작성자
+                </th>
+                <th>
+                    최종수정일
+                </th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            {{#posts}}
+                <tr>
+                    <td>
+                        {{id}}
+                    </td>
+                    <td>
+                        <a href="/posts/update/{{id}}">
+                            {{title}}
+                        </a>
+                    </td>
+                    <td>
+                        {{author}}
+                    </td>
+                    <td>
+                        {{modifiedDate}}
+                    </td>
+                </tr>
+            {{/posts}}
+            </tbody>
+        </table>
+        <div class="form-group row justify-content-center">
+            <div class="w300" style="padding-right:10px">
+                <input type="text" class="form-control form-control-sm" name="singer" id="singer" placeholder="가수">
+            </div>
+            <div class="w300" style="padding-right:10px">
+                <input type="text" class="form-control form-control-sm" name="songTitle" id="songTitle" placeholder="제목">
+            </div>
+            <div>
+                <button class="btn btn-sm btn-primary" id="btn-search">검색</button>
+            </div>
         </div>
-        <div class="w300" style="padding-right:10px">
-            <input type="text" class="form-control form-control-sm" name="songTitle" id="songTitle" placeholder="제목">
-        </div>
-        <div>
-            <button class="btn btn-sm btn-primary" id="btn-search">검색</button>
-        </div>
-    </div>
-    <table>
-        <tbody>
-        <tr class="thumbnail-wrap">
-            <td>
+            <div class="thumbnail-wrap">
                 <img id="thumbnail">
                 <p id="videoTitle"></p>
-                <button type="button" class="btn btn-primary" id="btn-previousMusic">이전 곡</button>
-                <button type="button" class="btn btn-primary" id="btn-playPause">재생/정지</button>
-                <button type="button" class="btn btn-primary" id="btn-nextMusic">다음 곡</button>
-                <button type="button" class="btn btn-primary" id="btn-putMusic">담기</button>
-                <br><br>
-                <form id="resetForm">
-                    <input style="display:none" id="controlBar" data-slider-id='ex1Slider' type="range" min="0" max="" step="1" value="0" data-popup-enabled="true" oninput="document.getElementById('range_val').innerHTML=this.value;"/>
-                    <input style="display:none" type="text" id="range_val" value=""/>
-                </form>
-            </td>
-            <td></td>
-            <td class="align-top">
-                <button type="text" class="btn btn-primary" id="btn-createList">새 플레이리스트</button><br><br>
-                <table class="table table-horizontal table-bordered" style ="width: 250%" id="mTable">
-                    <thead class="thead-strong">
-                    <tr>
-                        <th>
-                            No.
-                        </th>
-                        <th>
-                            Play List
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody id="mbody">
-                    {{#myMusicPlays}}
-                        <tr id="hideTr">
-                            <td>
-                                {{id}}
-                            </td>
-                            <td>
-                                <a href="javascript:void(0);" class="hideA">
-                                    {{title}}
-                                </a>
-                            </td>
-                        </tr>
-                    {{/myMusicPlays}}
-                    </tbody>
-                </table>
-                <table id="lTable" class="table table-horizontal table-bordered" style ="width: 250%; display:none">
-                    <thead class="thead-strong">
-                    <tr>
-                        <th>
-                            title
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody id="sbody">
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <iframe style="display:none" allowfullscreen="1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"  frameborder="0" width="100" height="100" id="player" src="">
-    </iframe><br>
-    <a href="/posts/save" role="button" class="btn btn-primary" >글 등록</a><br><br>
-    <!-- 목록 출력 영역-->
-    <table class="table table-horizontal table-bordered" style = "padding-right:10px">
-        <thead class="thead-strong" >
-        <tr>
-            <th>
-                게시글번호
-            </th>
-            <th>
-                제목
-            </th>
-            <th>
-                작성자
-            </th>
-            <th>
-                최종수정일
-            </th>
-        </tr>
-        </thead>
-        <tbody id="tbody">
-        {{#posts}}
-            <tr>
-                <td>
-                    {{id}}
-                </td>
-                <td>
-                    <a href="/posts/update/{{id}}">
-                        {{title}}
-                    </a>
-                </td>
-                <td>
-                    {{author}}
-                </td>
-                <td>
-                    {{modifiedDate}}
-                </td>
-            </tr>
-        {{/posts}}
-        </tbody>
-    </table>
-</div>
+            </div>
+        <button type="button" class="btn btn-primary" id="btn-previousMusic">이전 곡</button>
+        <button type="button" class="btn btn-primary" id="btn-playPause">재생/정지</button>
+        <button type="button" class="btn btn-primary" id="btn-nextMusic">다음 곡</button>
+    </div>
+
+<iframe style="display:none" allowfullscreen="1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"  frameborder="0" width="100" height="100" id="player" src="">
+</iframe>
 {{>layout/footer}}

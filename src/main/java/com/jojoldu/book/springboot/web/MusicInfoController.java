@@ -19,10 +19,6 @@ public class MusicInfoController {
     private static Logger logger = LoggerFactory.getLogger(MusicInfoController.class.getSimpleName());
     MusicInfoDto musicInfoDto = new MusicInfoDto();
     List<MusicInfoDto> searchMusicList = new ArrayList<MusicInfoDto>();
-
-    List<MusicInfoDto> AutoListsave = new ArrayList<MusicInfoDto>();
-    List<MusicInfoDto> PlayListsave = new ArrayList<MusicInfoDto>();
-
     @ResponseBody
     @PostMapping("/musicPlay")
     public String searchMusic(@RequestBody String jsonUri) {
@@ -61,13 +57,6 @@ public class MusicInfoController {
             JSONArray content2 = musicJObject.getJSONObject("contents").getJSONObject("twoColumnSearchResultsRenderer").getJSONObject("primaryContents").getJSONObject("sectionListRenderer").getJSONArray("contents").getJSONObject(0).getJSONObject("itemSectionRenderer").getJSONArray("contents");
 //            logger.info(content2.toString());
 
-            // 상단 광고 피하기
-            logger.info(content2.getJSONObject(0).keySet().toString());
-            if (content2.getJSONObject(0).keySet().contains("promotedSparklesTextSearchRenderer")) {
-                logger.info("상단 광고 표시");
-                content2 = musicJObject.getJSONObject("contents").getJSONObject("twoColumnSearchResultsRenderer").getJSONObject("primaryContents").getJSONObject("sectionListRenderer").getJSONArray("contents").getJSONObject(1).getJSONObject("itemSectionRenderer").getJSONArray("contents");
-            }
-
             searchMusicList = new ArrayList<MusicInfoDto>();
             for(int i=0;i<content2.length();i++) {
                 // 영상 정보(썸네일 주소, 영상 주소, 영상 제목)
@@ -91,45 +80,7 @@ public class MusicInfoController {
                 String finalVideoTitle = videoTitle.substring(0, videoTitle.indexOf("게시자")-1);
                 logger.info(finalVideoTitle);
 
-                String time = musicData.getJSONObject("lengthText").getJSONObject("accessibility").getJSONObject("accessibilityData").getString("label");
-                logger.info("시간: "+time);
-                int hourIndex = 0;
-                int hour = 0;
-                if (time.contains("시간")) {
-                    hourIndex = time.indexOf("시간");
-                    hour = Integer.parseInt(time.substring(0,hourIndex));
-                }
-
-                int minuteIndex = 0;
-                int minute = 0;
-                if (time.contains("분")) {
-                    minuteIndex = time.indexOf("분");
-                    if (hourIndex>0) {
-                        minute = Integer.parseInt(time.substring(hourIndex+3,minuteIndex));
-                    }
-                    else {
-                        minute = Integer.parseInt(time.substring(0,minuteIndex));
-                    }
-                }
-                int secondIndex = 0;
-                int second = 0;
-                if (time.contains("초")) {
-                    secondIndex = time.indexOf("초");
-                    if (minuteIndex>0) {
-                        second = Integer.parseInt(time.substring(minuteIndex+2, secondIndex));
-                    }
-                    else if (hourIndex>0) {
-                        second = Integer.parseInt(time.substring(hourIndex+3, secondIndex));
-                    }
-                    else {
-                        second = Integer.parseInt(time.substring(0, secondIndex));
-                    }
-
-                }
-                int secondResult = hour *3600 + minute * 60 + second;
-                logger.info("초: "+secondResult);
-
-                musicInfoDto = new MusicInfoDto(thumbnailLink, videoLink, finalVideoTitle, secondResult);
+                musicInfoDto = new MusicInfoDto(thumbnailLink, videoLink, finalVideoTitle);
                 logger.info(musicInfoDto.toString());
 
                 searchMusicList.add(musicInfoDto);
@@ -141,27 +92,5 @@ public class MusicInfoController {
         }
 //        return musicInfoDto.toString();
         return searchMusicList.toString();
-    }
-    @ResponseBody
-    @PostMapping("/autoPlaysave")
-    public String autoplaysave() {
-        AutoDatabaseQuery insert01 = new AutoDatabaseQuery();
-        insert01.INSERT01("","","");
-        return AutoListsave.toString();
-    }
-
-    @ResponseBody
-    @PostMapping("/myPlaysave")
-    public String myplaysave(@RequestBody String jsonData) {
-        logger.info(jsonData);
-        JSONObject dataJObject = new JSONObject(jsonData);
-        String thumbnailUri = dataJObject.getString("thumbnailLink");
-        String title = dataJObject.getString("videoTitle");
-        String videoUri = dataJObject.getString("videoLink");
-        String name = dataJObject.getString("String");
-
-        PlayDatabaseQuery insert02 = new PlayDatabaseQuery();
-        insert02.INSERT02(name, title, videoUri, thumbnailUri);
-        return jsonData;
     }
 }
