@@ -43,11 +43,11 @@ public class MusicListRepositoryTest {
         MuRepo.findById(1L).ifPresent((musicList -> {System.out.println(musicList);}));
     }
 
-    @Test
-    public void testDelete() {
-        System.out.println("DELETE Entity");
-        MuRepo.deleteById(1L);
-    }
+//    @Test
+//    public void testDelete() {
+//        System.out.println("DELETE Entity");
+//        MuRepo.deleteById(1L);
+//    }
 
 
 }

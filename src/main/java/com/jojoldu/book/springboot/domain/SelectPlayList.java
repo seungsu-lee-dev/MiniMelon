@@ -76,9 +76,10 @@ public class SelectPlayList {
                 String title = rs.getString("title");
                 String video_link = rs.getString("video_link");
                 String thumbnail_link = rs.getString("thumbnail_link");
-                logger.info("title: " + title + ", video_link: " + video_link + ", thumbnail_link: " + thumbnail_link);
+                int second = rs.getInt("second");
+                logger.info("title: " + title + ", video_link: " + video_link + ", thumbnail_link: " + thumbnail_link + ", second: " + second);
 
-                musicInfoDto = new MusicInfoDto(thumbnail_link, video_link, title);
+                musicInfoDto = new MusicInfoDto(thumbnail_link, video_link, title, second);
                 logger.info(musicInfoDto.toString());
 
                 musicPlayList.add(musicInfoDto);
