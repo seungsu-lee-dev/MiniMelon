@@ -5,6 +5,8 @@ var main = {
         let initialUri = "https://www.youtube.com/results?search_query=";
         let searchIndex = 0;
         let musicList;
+        let playListName = "";
+        let playList = "";
         $('#btn-save').on('click', function () {
             _this.save();
         });
@@ -86,7 +88,13 @@ var main = {
                 alert("노래를 선택해주세요");
             }
             else {
-                _this.myplaysave();
+                _this.myplaysave(playListName);
+                const selectBody = document.querySelector("#sbody");
+                let tr = document.createElement("tr");
+                let td = document.createElement("td");
+                td.innerText = document.getElementById('videoTitle').innerText;
+                tr.appendChild(td);
+                selectBody.appendChild(tr);
             }
         });
 
@@ -101,6 +109,33 @@ var main = {
             else {
                 _this.listInput(newListName);
                 alert('새로운 플레이리스트를 생성하였습니다.');
+                _this.mainlistInput(newListName);
+                _this.myplaysave(newListName);
+            }
+        });
+
+        $('.hideA').on('click', function () {
+            document.getElementById("mTable").setAttribute("style", "display:none");
+            document.getElementById("lTable").setAttribute("style", "display:");
+            playListName = $(this).text().trim();
+            console.log("playListName: " + playListName);
+
+            const selectBody = document.querySelector("#sbody");
+            console.log("selectBody: " + selectBody);
+
+            playList = _this.selectlistInput(playListName);
+
+            console.log(playList[0]);
+            console.log(playList[0].videoTitle);
+            let playListLength = Object.keys(playList).length;
+            console.log("playListLength: " + playListLength);
+
+            for (let i=0;i<playListLength;i++) {
+                let tr = document.createElement("tr");
+                let td = document.createElement("td");
+                td.innerText = playList[i].videoTitle;
+                tr.appendChild(td);
+                selectBody.appendChild(tr);
             }
         });
     },
@@ -207,8 +242,9 @@ var main = {
         return obj;
     },
 
-    myplaysave : function (){
+    myplaysave : function (newListName){
         var data = {
+            String : newListName,
             thumbnailLink:document.getElementById('thumbnail').getAttribute('src'),
             videoTitle:document.getElementById('videoTitle').innerText,
             videoLink:document.getElementById('player').getAttribute('src')
@@ -244,19 +280,57 @@ var main = {
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(data),
         }).done(function() {
-            alert('테이블이 생성되었습니다.');
+//            alert('테이블이 생성되었습니다.');
             window.location.href = '/';
         }).fail(function (error) {
             alert(JSON.stringify(error));
         });
+        },
+
+    mainlistInput : function(newListName) {
+        var data = { String : newListName };
+        var obj;
+        $.ajax({
+            type: 'POST',
+            url: '/insertListTable',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            async: false
+        }).done(function() {
+            window.location.href = '/';
+        }).fail(function(error) {
+            console.log(error);
+        });
+         return obj;
     },
+
+    selectlistInput : function(newListName) {
+        var data = { String : newListName };
+        var obj;
+        $.ajax({
+            type: 'POST',
+            url: '/selectTable',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(data),
+            async: false
+        }).done(function(data) {
+            obj = JSON.parse(data);
+        }).fail(function(error) {
+            console.log(error);
+        });
+        return obj;
+    },
+
 
     overlayInfo : function (musicJson, index) {
         document.getElementById("thumbnail").setAttribute("src", musicJson[index].thumbnailLink);
         document.getElementById("videoTitle").innerText = musicJson[index].videoTitle;
         let link = "https://www.youtube.com/embed/" + musicJson[index].videoLink + "?autoplay=0&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + musicJson[index].videoLink;
         document.getElementById("player").setAttribute("src", link);
+    },
+
+    hideTable : function () {
+        document.getElementById("hideTr").setAttribute("style", "display:none");
     }
 };
-
 main.init();
