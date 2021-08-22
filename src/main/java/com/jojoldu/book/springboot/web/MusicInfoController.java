@@ -158,9 +158,10 @@ public class MusicInfoController {
         String thumbnailUri = dataJObject.getString("thumbnailLink");
         String title = dataJObject.getString("videoTitle");
         String videoUri = dataJObject.getString("videoLink");
+        String name = dataJObject.getString("String");
 
         PlayDatabaseQuery insert02 = new PlayDatabaseQuery();
-        insert02.INSERT02(title, videoUri, thumbnailUri);
+        insert02.INSERT02(name, title, videoUri, thumbnailUri);
         return jsonData;
     }
 }

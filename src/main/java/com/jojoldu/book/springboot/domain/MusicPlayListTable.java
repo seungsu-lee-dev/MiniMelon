@@ -1,18 +1,20 @@
-package com.jojoldu.book.springboot.web;
+package com.jojoldu.book.springboot.domain;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import org.json.JSONObject;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.*;
 import java.util.Properties;
 
-public class PlayDatabaseQuery {
+@RestController
+public class MusicPlayListTable {
     public static Connection makeConnection(){
 
         Connection con = null;
@@ -48,27 +50,23 @@ public class PlayDatabaseQuery {
         return con;
     }
 
-    public static void INSERT02(String newListName, String videoTitle, String videoLink, String thumbnailLink){
+    @ResponseBody
+    @PostMapping("/createTable")
+    public static void CreateTable01(@RequestBody String listInput){
 
         Connection con = makeConnection();
-
         try {
-            String query = "INSERT INTO "+ newListName +" (title, video_link, thumbnail_link) " +
-                    "VALUES (?, ?, ?)";
+            JSONObject uriJObject = new JSONObject(listInput);
+            String tableName = uriJObject.getString("String");
+            String query = "CREATE TABLE "+ tableName
+                    +"( title varchar(100), video_link varchar(500), thumbnail_link varchar(500) )" ;
 
-            //PreparedStatement로 쿼리 수행
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, videoTitle);
-            pstmt.setString(2, videoLink);
-            pstmt.setString(3, thumbnailLink);
+            pstmt.executeUpdate();
 
-            int ret = pstmt.executeUpdate();
-            System.out.println(ret);
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
+

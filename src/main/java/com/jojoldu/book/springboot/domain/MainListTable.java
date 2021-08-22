@@ -1,18 +1,19 @@
-package com.jojoldu.book.springboot.web;
+package com.jojoldu.book.springboot.domain;
+import org.json.JSONObject;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.web.bind.annotation.GetMapping;
-
+import javax.persistence.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.Reader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.*;
 import java.util.Properties;
 
-public class PlayDatabaseQuery {
+@RestController
+public class MainListTable {
     public static Connection makeConnection(){
 
         Connection con = null;
@@ -47,20 +48,20 @@ public class PlayDatabaseQuery {
         }
         return con;
     }
-
-    public static void INSERT02(String newListName, String videoTitle, String videoLink, String thumbnailLink){
-
+    @ResponseBody
+    @PostMapping("/insertListTable")
+    public static void InsertListTable01(@RequestBody String mainlistInput){
         Connection con = makeConnection();
 
         try {
-            String query = "INSERT INTO "+ newListName +" (title, video_link, thumbnail_link) " +
-                    "VALUES (?, ?, ?)";
+            JSONObject uriJObject = new JSONObject(mainlistInput);
+            String listName = uriJObject.getString("String");
+            String query = "INSERT INTO my_music_plays (title) " +
+                    "VALUES (?)";
 
             //PreparedStatement로 쿼리 수행
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, videoTitle);
-            pstmt.setString(2, videoLink);
-            pstmt.setString(3, thumbnailLink);
+            pstmt.setString(1, listName);
 
             int ret = pstmt.executeUpdate();
             System.out.println(ret);
