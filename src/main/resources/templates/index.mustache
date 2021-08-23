@@ -5,8 +5,7 @@
     </h1>
     <div class="row">
         <div class="col-md-6">
-            <h2>미니 멜론</h2>
-            <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
+            <h2>미니 멜론
             {{#loginName}}
                 Logged in as: <span id="user">{{loginName}}</span>
                 <a href="/logout" class="btn btn-info active" role="button">Logout</a>
@@ -15,6 +14,7 @@
                 <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
                 <a href="/oauth2/authorization/naver" class="btn btn-secondary active" role="button">Naver Login</a>
             {{/loginName}}
+            </h2>
         </div>
     </div>
     <br>
@@ -26,7 +26,7 @@
             <input type="text" class="form-control form-control-sm" name="songTitle" id="songTitle" placeholder="제목">
         </div>
         <div>
-            <button class="btn btn-sm btn-primary" id="btn-search">검색</button>
+            <button class="btn btn-sm btn-primary btn-login-check" id="btn-search">검색</button>
         </div>
     </div>
     <table>
@@ -35,10 +35,10 @@
             <td>
                 <img id="thumbnail">
                 <p id="videoTitle"></p>
-                <button type="button" class="btn btn-primary" id="btn-previousMusic">이전 곡</button>
-                <button type="button" class="btn btn-primary" id="btn-playPause">재생/정지</button>
-                <button type="button" class="btn btn-primary" id="btn-nextMusic">다음 곡</button>
-                <button type="button" class="btn btn-primary" id="btn-putMusic">담기</button>
+                <button type="button" class="btn btn-primary btn-login-check" id="btn-previousMusic">이전 곡</button>
+                <button type="button" class="btn btn-primary btn-login-check" id="btn-playPause">재생/정지</button>
+                <button type="button" class="btn btn-primary btn-login-check" id="btn-nextMusic">다음 곡</button>
+                <button type="button" class="btn btn-primary btn-login-check" id="btn-putMusic">담기</button>
                 <br><br>
                 <form id="resetForm">
                     <input style="display:none" id="controlBar" data-slider-id='ex1Slider' type="range" min="0" max="" step="1" value="0" data-popup-enabled="true" oninput="document.getElementById('range_val').innerHTML=this.value;"/>
@@ -47,7 +47,7 @@
             </td>
             <td></td>
             <td class="align-top">
-                <button type="text" class="btn btn-primary" id="btn-createList">새 플레이리스트</button><br><br>
+                <button type="text" class="btn btn-primary btn-login-check" id="btn-createList">새 플레이리스트</button><br><br>
                 <table class="table table-horizontal table-bordered" style ="width: 250%" id="mTable">
                     <thead class="thead-strong">
                     <tr>
@@ -66,7 +66,7 @@
                                 {{id}}
                             </td>
                             <td>
-                                <a href="javascript:void(0);" class="hideA">
+                                <a href="javascript:void(0);" class="hideA btn-login-check">
                                     {{title}}
                                 </a>
                             </td>

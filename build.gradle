@@ -34,6 +34,7 @@ dependencies {
     compile('org.jsoup:jsoup:1.11.3')
     compile('org.json:json:20190722')
     compile('org.springframework.boot:spring-boot-starter-oauth2-client')
+    compile('org.springframework.session:spring-session-jdbc:2.1.6.RELEASE')
     testCompile('org.springframework.boot:spring-boot-starter-test') {
         exclude group: "com.vaadin.external.google", module:"android-json"
     }

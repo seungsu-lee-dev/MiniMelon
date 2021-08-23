@@ -21,6 +21,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model, @LoginUser SessionUser user) {
+        model.addAttribute("posts", postsService.findAllDesc());
         model.addAttribute("myMusicPlays", myMusicPlaysService.findAllDesc());
         if (user != null) {
             model.addAttribute("loginName", user.getName());

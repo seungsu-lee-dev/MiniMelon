@@ -207,6 +207,10 @@ var main = {
                 selectBody.appendChild(tr);
             }
         });
+
+        $('.btn-login-check').on('click', function () {
+
+        });
     },
     save : function () {
         var data = {
@@ -435,6 +439,10 @@ var main = {
         }
         document.getElementById("resetForm").reset();
         document.getElementById("range_val").setAttribute("value", timeValue);
+    },
+
+    loginSessionCheck:function() {
+
     }
 
 };
