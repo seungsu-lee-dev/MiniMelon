@@ -59,7 +59,7 @@ public class MusicPlayListTable {
             JSONObject uriJObject = new JSONObject(listInput);
             String tableName = uriJObject.getString("String");
             String query = "CREATE TABLE "+ tableName
-                    +"( title varchar(100), video_link varchar(500), thumbnail_link varchar(500) )" ;
+                    +"( title varchar(100), video_link varchar(500), thumbnail_link varchar(500), second INT )" ;
 
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.executeUpdate();

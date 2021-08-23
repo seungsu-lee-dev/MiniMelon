@@ -48,19 +48,20 @@ public class PlayDatabaseQuery {
         return con;
     }
 
-    public static void INSERT02(String newListName, String videoTitle, String videoLink, String thumbnailLink){
+    public static void INSERT02(String newListName, String videoTitle, String videoLink, String thumbnailLink, String second){
 
         Connection con = makeConnection();
 
         try {
-            String query = "INSERT INTO "+ newListName +" (title, video_link, thumbnail_link) " +
-                    "VALUES (?, ?, ?)";
+            String query = "INSERT INTO "+ newListName +" (title, video_link, thumbnail_link, second) " +
+                    "VALUES (?, ?, ?, ?)";
 
             //PreparedStatement로 쿼리 수행
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setString(1, videoTitle);
             pstmt.setString(2, videoLink);
             pstmt.setString(3, thumbnailLink);
+            pstmt.setString(4, second);
 
             int ret = pstmt.executeUpdate();
             System.out.println(ret);

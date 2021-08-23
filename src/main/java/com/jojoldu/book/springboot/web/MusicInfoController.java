@@ -155,13 +155,14 @@ public class MusicInfoController {
     public String myplaysave(@RequestBody String jsonData) {
         logger.info(jsonData);
         JSONObject dataJObject = new JSONObject(jsonData);
+        String name = dataJObject.getString("String");
         String thumbnailUri = dataJObject.getString("thumbnailLink");
         String title = dataJObject.getString("videoTitle");
         String videoUri = dataJObject.getString("videoLink");
-        String name = dataJObject.getString("String");
+        String second = dataJObject.getString("second");
 
         PlayDatabaseQuery insert02 = new PlayDatabaseQuery();
-        insert02.INSERT02(name, title, videoUri, thumbnailUri);
+        insert02.INSERT02(name, title, videoUri, thumbnailUri, second);
         return jsonData;
     }
 }

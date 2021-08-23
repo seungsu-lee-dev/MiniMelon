@@ -40,6 +40,7 @@ var main = {
                 let tr = document.createElement("tr");
                 let td = document.createElement("td");
                 td.innerText = videoTitle;
+
                 tr.appendChild(td);
                 tableBody.appendChild(tr);
                 startTimer();
@@ -53,6 +54,7 @@ var main = {
         });
 
         $('#btn-search').on('click', function () {
+            playList = ""; // 검색하면 플레이리스트 리스트 초기화
             if (timerId!=0) {
                 clearInterval(timerId);
             }
@@ -114,7 +116,12 @@ var main = {
                 const selectBody = document.querySelector("#sbody");
                 let tr = document.createElement("tr");
                 let td = document.createElement("td");
-                td.innerText = document.getElementById('videoTitle').innerText;
+                let a = document.createElement("a");
+                a.setAttribute("href", "javascript:void(0);");
+                a.addEventListener("click", songClick);
+                a.setAttribute("class", "songA");
+                a.innerText = document.getElementById('videoTitle').innerText;
+                td.appendChild(a);
                 tr.appendChild(td);
                 selectBody.appendChild(tr);
             }
@@ -202,11 +209,36 @@ var main = {
             for (let i=0;i<playListLength;i++) {
                 let tr = document.createElement("tr");
                 let td = document.createElement("td");
-                td.innerText = playList[i].videoTitle;
+                let a = document.createElement("a");
+                a.setAttribute("href", "javascript:void(0);");
+                a.addEventListener("click", songClick);
+                a.setAttribute("class", "songA");
+                a.innerText = playList[i].videoTitle;
+                td.appendChild(a);
                 tr.appendChild(td);
                 selectBody.appendChild(tr);
             }
         });
+
+        function songClick() {
+            if (timerId!=0) {
+                clearInterval(timerId);
+            }
+            musicList = playList;
+            let songName = $(this).text();
+            let musicObject = "";
+            console.log(songName);
+            console.log(playList);
+            $.each(playList, function () {
+               if (this["videoTitle"] == songName) {
+                   musicObject = this;
+                   console.log("videoTitle equal");
+               }
+            });
+            console.log(musicObject);
+            playUri = _this.overlayInfo(musicObject, -1);
+            _this.resetTime();
+        };
     },
     save : function () {
         var data = {
@@ -320,7 +352,8 @@ var main = {
             String : newListName,
             thumbnailLink:document.getElementById('thumbnail').getAttribute('src'),
             videoTitle:document.getElementById('videoTitle').innerText,
-            videoLink:document.getElementById('player').getAttribute('src')
+            videoLink:document.getElementById('player').getAttribute('src'),
+            second:document.getElementById('controlBar').getAttribute('max')
         };
         var obj;
         $.ajax({
@@ -407,14 +440,25 @@ var main = {
     },
 
     overlayInfo : function (musicJson, index) {
-        document.getElementById("thumbnail").setAttribute("src", musicJson[index].thumbnailLink);
-        document.getElementById("videoTitle").innerText = musicJson[index].videoTitle;
-        let link = "https://www.youtube.com/embed/" + musicJson[index].videoLink + "?autoplay=0&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + musicJson[index].videoLink;
-        document.getElementById("player").setAttribute("src", link);
-        document.getElementById("controlBar").setAttribute("style", "");
-        document.getElementById("controlBar").setAttribute("max", musicJson[index].second);
-        document.getElementById("range_val").setAttribute("style", "");
-        return musicJson[index].videoLink;
+        if (index == -1) {
+            document.getElementById("thumbnail").setAttribute("src", musicJson.thumbnailLink);
+            document.getElementById("videoTitle").innerText = musicJson.videoTitle;
+            let link = musicJson.videoLink;
+            document.getElementById("player").setAttribute("src", link);
+            document.getElementById("controlBar").setAttribute("style", "");
+            document.getElementById("controlBar").setAttribute("max", musicJson.second);
+            document.getElementById("range_val").setAttribute("style", "");
+            return musicJson.videoLink;
+        } else {
+            document.getElementById("thumbnail").setAttribute("src", musicJson[index].thumbnailLink);
+            document.getElementById("videoTitle").innerText = musicJson[index].videoTitle;
+            let link = "https://www.youtube.com/embed/" + musicJson[index].videoLink + "?autoplay=0&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + musicJson[index].videoLink;
+            document.getElementById("player").setAttribute("src", link);
+            document.getElementById("controlBar").setAttribute("style", "");
+            document.getElementById("controlBar").setAttribute("max", musicJson[index].second);
+            document.getElementById("range_val").setAttribute("style", "");
+            return musicJson[index].videoLink;
+        }
     },
 
     hideTable : function () {
