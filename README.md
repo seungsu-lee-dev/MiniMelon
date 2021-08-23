@@ -20,7 +20,7 @@ Web URL : http://www.cat-team.duckdns.org/
 
 사용 서비스 : AWS EC2 Linux, RDS MySQL 프리티어
 
-사용 프로그램 : PuTTY
+서버 접속 시 사용 프로그램 : PuTTY
 
 개발기간 : 2021년 8월 17일 ~ 2021년 8월 23일
 
