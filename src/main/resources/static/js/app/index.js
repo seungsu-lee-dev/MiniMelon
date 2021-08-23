@@ -207,10 +207,6 @@ var main = {
                 selectBody.appendChild(tr);
             }
         });
-
-        $('.btn-login-check').on('click', function () {
-
-        });
     },
     save : function () {
         var data = {
@@ -281,6 +277,10 @@ var main = {
             data: JSON.stringify(data),
             async: false
         }).done(function(data) {
+            if (data.indexOf("html")!=-1) {
+                console.log("contains html");
+                window.location.href = '/login';
+            }
             console.log("searchValue: "+data);
             obj = JSON.parse(data);
             console.log(obj[0].thumbnailLink);
@@ -330,6 +330,10 @@ var main = {
             data: JSON.stringify(data),
             async: false
         }).done(function(data) {
+            if (data.indexOf("html")!=-1) {
+                console.log("contains html");
+                window.location.href = '/login';
+            }
             console.log("myPlayValue: "+data);
             obj = JSON.parse(data);
             console.log(obj.videoTitle);
@@ -353,6 +357,10 @@ var main = {
             contentType: 'application/json; charset=utf-8',
             data: JSON.stringify(data),
         }).done(function() {
+            if (data.indexOf("html")!=-1) {
+                console.log("contains html");
+                window.location.href = '/login';
+            }
 //            alert('테이블이 생성되었습니다.');
             window.location.href = '/';
         }).fail(function (error) {
@@ -387,6 +395,10 @@ var main = {
             data: JSON.stringify(data),
             async: false
         }).done(function(data) {
+            if (data.indexOf("html")!=-1) {
+                console.log("contains html");
+                window.location.href = '/login';
+            }
             obj = JSON.parse(data);
         }).fail(function(error) {
             console.log(error);
@@ -440,10 +452,6 @@ var main = {
         document.getElementById("resetForm").reset();
         document.getElementById("range_val").setAttribute("value", timeValue);
     },
-
-    loginSessionCheck:function() {
-
-    }
 
 };
 main.init();
