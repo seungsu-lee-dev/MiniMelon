@@ -10,6 +10,8 @@ var main = {
         let playUri = "";
         let timerId = 0;
         let timerId2 = 0;
+        let listIndexArray = [];
+        let overallMusicJson = "";
         $('#btn-save').on('click', function () {
             _this.save();
         });
@@ -70,9 +72,12 @@ var main = {
             } else {
                 searchUri = initialUri + singer + "+" + songTitle;
                 musicList = _this.searchMusic(searchUri);
+                console.log("musicList: " + musicList.toString());
+                // JSON.parse(data);
+                overallMusicJson = musicList;
                 searchIndex = 0;
                 isPlaying = false;
-                playUri = _this.overlayInfo(musicList, searchIndex);
+                playUri = _this.overlayInfo(musicList, searchIndex, false);
                 _this.resetTime();
             }
         });
@@ -88,7 +93,12 @@ var main = {
                 return;
             }
             isPlaying = false;
-            playUri = _this.overlayInfo(musicList, ++searchIndex);
+            if (playList == musicList) {
+                playUri = _this.overlayInfo(musicList, ++searchIndex, true);
+            }
+            else {
+                playUri = _this.overlayInfo(musicList, ++searchIndex, false);
+            }
             _this.resetTime();
         });
         $('#btn-previousMusic').on('click', function () {
@@ -103,7 +113,12 @@ var main = {
                 return;
             }
             isPlaying = false;
-            playUri = _this.overlayInfo(musicList, --searchIndex);
+            if (playList == musicList) {
+                playUri = _this.overlayInfo(musicList, ++searchIndex, true);
+            }
+            else {
+                playUri = _this.overlayInfo(musicList, ++searchIndex, false);
+            }
             _this.resetTime();
         });
 
@@ -120,6 +135,8 @@ var main = {
                 a.setAttribute("href", "javascript:void(0);");
                 a.addEventListener("click", songClick);
                 a.setAttribute("class", "songA");
+                let listIndex = listIndexArray.length;
+                listIndexArray[listIndex] = document.getElementById('videoTitle').innerText;
                 a.innerText = document.getElementById('videoTitle').innerText;
                 td.appendChild(a);
                 tr.appendChild(td);
@@ -201,8 +218,8 @@ var main = {
 
             playList = _this.selectlistInput(playListName);
 
-            console.log(playList[0]);
-            console.log(playList[0].videoTitle);
+            console.log(playList);
+            console.log(playList.videoTitle);
             let playListLength = Object.keys(playList).length;
             console.log("playListLength: " + playListLength);
 
@@ -213,6 +230,7 @@ var main = {
                 a.setAttribute("href", "javascript:void(0);");
                 a.addEventListener("click", songClick);
                 a.setAttribute("class", "songA");
+                listIndexArray[i] = playList[i].videoTitle;
                 a.innerText = playList[i].videoTitle;
                 td.appendChild(a);
                 tr.appendChild(td);
@@ -229,16 +247,21 @@ var main = {
             let musicObject = "";
             console.log(songName);
             console.log(playList);
-            $.each(playList, function () {
+            $.each(playList, function (index) {
                if (this["videoTitle"] == songName) {
                    musicObject = this;
                    console.log("videoTitle equal");
+                   console.log("playlist index: " + index);
+                   searchIndex = index;
                }
             });
             console.log(musicObject);
-            playUri = _this.overlayInfo(musicObject, -1);
+            // playUri = _this.overlayInfo(musicObject, 0);
+
+            playUri = _this.overlayInfo(musicList, searchIndex, true);
             _this.resetTime();
         };
+
     },
     save : function () {
         var data = {
@@ -439,27 +462,32 @@ var main = {
         return obj;
     },
 
-    overlayInfo : function (musicJson, index) {
-        if (index == -1) {
-            document.getElementById("thumbnail").setAttribute("src", musicJson.thumbnailLink);
-            document.getElementById("videoTitle").innerText = musicJson.videoTitle;
-            let link = musicJson.videoLink;
-            document.getElementById("player").setAttribute("src", link);
-            document.getElementById("controlBar").setAttribute("style", "");
-            document.getElementById("controlBar").setAttribute("max", musicJson.second);
-            document.getElementById("range_val").setAttribute("style", "");
-            return musicJson.videoLink;
-        } else {
+    overlayInfo : function (musicJson, index, playlistBool) {
+            if (playlistBool) {
+            // if (index == -1) {
+                document.getElementById("thumbnail").setAttribute("src", musicJson[index].thumbnailLink);
+                document.getElementById("videoTitle").innerText = musicJson[index].videoTitle;
+                let link = musicJson[index].videoLink;
+                document.getElementById("player").setAttribute("src", link);
+                document.getElementById("controlBar").setAttribute("style", "");
+                document.getElementById("controlBar").setAttribute("max", musicJson[index].second);
+                document.getElementById("range_val").setAttribute("style", "");
+                return musicJson.videoLink;
+            } else {
             document.getElementById("thumbnail").setAttribute("src", musicJson[index].thumbnailLink);
             document.getElementById("videoTitle").innerText = musicJson[index].videoTitle;
-            let link = "https://www.youtube.com/embed/" + musicJson[index].videoLink + "?autoplay=0&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + musicJson[index].videoLink;
+            let link = musicJson[index].videoLink;
+            if (!playlistBool) {
+                link = "https://www.youtube.com/embed/" + musicJson[index].videoLink + "?autoplay=0&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + musicJson[index].videoLink;
+            }
+            // let link = "https://www.youtube.com/embed/" + musicJson[index].videoLink + "?autoplay=0&amp;rel=0&amp;showinfo=0&amp;showsearch=0&amp;controls=0&amp;enablejsapi=1&amp;playlist=" + musicJson[index].videoLink;
             document.getElementById("player").setAttribute("src", link);
             document.getElementById("controlBar").setAttribute("style", "");
             document.getElementById("controlBar").setAttribute("max", musicJson[index].second);
             document.getElementById("range_val").setAttribute("style", "");
             return musicJson[index].videoLink;
-        }
-    },
+            }
+        },
 
     hideTable : function () {
         document.getElementById("hideTr").setAttribute("style", "display:none");
