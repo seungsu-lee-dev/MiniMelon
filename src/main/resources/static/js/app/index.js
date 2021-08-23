@@ -35,16 +35,16 @@ var main = {
                 searchUri = initialUri + singer + "+" + songTitle;
                 _this.autoplaysave(searchUri);
 
-                const videoTitle = document.getElementById('videoTitle').innerText;
-                console.log("videoTitle: "+videoTitle);
-                const tableBody = document.querySelector("#tbody");
-                console.log("tableBody: " + tableBody);
-                let tr = document.createElement("tr");
-                let td = document.createElement("td");
-                td.innerText = videoTitle;
-
-                tr.appendChild(td);
-                tableBody.appendChild(tr);
+                // const videoTitle = document.getElementById('videoTitle').innerText;
+                // console.log("videoTitle: "+videoTitle);
+                // const tableBody = document.querySelector("#tbody");
+                // console.log("tableBody: " + tableBody);
+                // let tr = document.createElement("tr");
+                // let td = document.createElement("td");
+                // td.innerText = videoTitle;
+                //
+                // tr.appendChild(td);
+                // tableBody.appendChild(tr);
                 startTimer();
             } else {
                 $('#player')[0].contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
