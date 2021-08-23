@@ -22,7 +22,7 @@ Web URL : http://www.cat-team.duckdns.org/
 
 사용 프로그램 : PuTTY
 
-개발기간 : 2021년 8월 17일 ~ 2021년 8월 19일
+개발기간 : 2021년 8월 17일 ~ 2021년 8월 23일
 
 개발팀 : [CAT (Code & Talk)](https://github.com/Code-And-Talk) : [박정란](https://github.com/uiop1370)(팀장), [이승수](https://github.com/seungsu-lee-dev), [이종원](https://github.com/LJ-W), [이홍기](https://github.com/Hong-code-maker)
 
