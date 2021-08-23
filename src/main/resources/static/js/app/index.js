@@ -114,10 +114,10 @@ var main = {
             }
             isPlaying = false;
             if (playList == musicList) {
-                playUri = _this.overlayInfo(musicList, ++searchIndex, true);
+                playUri = _this.overlayInfo(musicList, --searchIndex, true);
             }
             else {
-                playUri = _this.overlayInfo(musicList, ++searchIndex, false);
+                playUri = _this.overlayInfo(musicList, --searchIndex, false);
             }
             _this.resetTime();
         });
